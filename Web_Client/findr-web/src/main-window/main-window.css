@@ -46,3 +46,8 @@
   width: 80%;
   margin: auto;
 }
+
+.main-window-button {
+  margin: 30px auto auto auto;
+  text-align: center;
+}

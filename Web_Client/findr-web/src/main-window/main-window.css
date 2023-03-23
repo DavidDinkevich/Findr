@@ -1,0 +1,48 @@
+.dropzone {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  border: 2px dashed #ccc;
+  height: 80%;
+  padding: 20px;
+  cursor: pointer;
+}
+  
+.dropzone p {
+  margin: 0;
+}
+  
+.video-player {
+  margin-top: 20px;
+  max-width: 80%;
+  height: auto;
+}
+
+#main_div {
+  margin: 6% 20% 10% 20%;
+}
+
+#query_bar {
+  margin-top: 50px;
+  margin-right: auto;
+  margin-left: auto;
+  justify-content: center;
+  display: flex;
+  width: 80%
+}
+
+#logo {
+  display: flex;
+  justify-content: center;
+  font-size: 60px;
+  font-weight: 600;
+  margin-bottom: 50px;
+}
+
+#video-drop-zone {
+  border: '1px solid black';
+  height: 200px;
+  width: 80%;
+  margin: auto;
+}

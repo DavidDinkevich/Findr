@@ -1,7 +1,7 @@
 import uvicorn
 import os
 
-from routers.findR_requests import app
+from routers.Firebase import app
 
 if __name__ == "__main__":
     print("running server")

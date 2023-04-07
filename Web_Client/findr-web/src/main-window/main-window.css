@@ -34,11 +34,13 @@
 
 #logo {
   display: flex;
-  justify-content: center;
+  margin: auto;
+  text-align: center;
   font-size: 60px;
   font-weight: 600;
   margin-bottom: 50px;
 }
+
 
 #video-drop-zone {
   border: '1px solid black';

@@ -12,6 +12,7 @@ import React, { useState, useEffect } from 'react';
 import Dropzone from 'react-dropzone';
 import ReactPlayer from 'react-player';
 import './main-window.css';
+import Logo from '../only_logo.png';
 
 function VideoUploader() {
   const [videoFile, setVideoFile] = useState(null);
@@ -37,11 +38,14 @@ function VideoUploader() {
 
   return (
     <div id='main_div'>
-      <label id='logo'>Findr</label>
+      <div className="logo_header">
+      <img src={Logo} alt="Logo" className="logo" />
+      </div>
+      
       {!videoFile ? (
         <Dropzone onDrop={handleDrop}>
           {({ getRootProps, getInputProps }) => (
-            <div id='video-drop-zone' {...getRootProps()} style={{ border: 'dashed 2px gray', display: 'flex', justifyContent: 'center', width: '80%', height: '200px' }}>
+            <div id='video-drop-zone' {...getRootProps()} style={{ border: 'dashed 2px gray', display: 'flex', justifyContent: 'center', width: '80%', height: '200px'}}>
               <input {...getInputProps()} accept="video/*" />
               <p style={{ margin: 'auto' }}>Drag and drop a video or image file here.</p>
             </div>

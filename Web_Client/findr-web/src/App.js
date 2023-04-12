@@ -2,6 +2,7 @@ import './App.css';
 import { BrowserRouter as Router,  Routes,Route } from 'react-router-dom';
 import VideoUploader from './main-window/MainWindow';
 import Login from './login-page/LoginPage';
+import SignupPage from './signupPage/signup';
 
 function App() {
   return (
@@ -9,7 +10,7 @@ function App() {
       <Routes>
         <Route exact path="/" element={<Login/>} />
         <Route path="/uploadVideo" element={<VideoUploader />} />
-        <Route path="/contact" element={<>sdf</>} />
+        <Route path="/signup" element={<SignupPage/>} />
       </Routes>
     </Router>
   );

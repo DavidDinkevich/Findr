@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Logo from '../only_logo.png';
 import './login-page.css';
 
 const Login = () => {
@@ -11,7 +12,7 @@ const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // handle login logic here
-    if (username === 'correct_username' && password === 'correct_password') {
+    if (username === 'cor' && password === 'cor') {
       navigate('/uploadVideo');
     }
     else {
@@ -22,10 +23,10 @@ const Login = () => {
 
   return (
     <div className="container">
+      <img src={Logo} alt="Logo" className="logo" />
       <div className="sidebar">
-        <h2>About Us</h2>
+      <h1>Introducing findR</h1>     
         <p>findR is a powerful tool that allows you to extract frames from a video based on a text description of the content. Simply enter the text description of the frame you want to extract, and our app will analyze the video to find the corresponding frame.</p>
-
       </div>
     <div className="login-container">
 
@@ -52,7 +53,7 @@ const Login = () => {
         <p style={{ color: 'red', marginTop: '0.5rem' }}>{errorMessage}</p>
         <div className="button-container">
           <button type="submit">Submit</button>
-          <button onClick={() => navigate('/uploadVideo')}>Sign up</button>
+          <button onClick={() => navigate('/signup')}>Sign up</button>
         </div>
       </form>
     </div>

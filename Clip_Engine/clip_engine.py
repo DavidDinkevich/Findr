@@ -22,11 +22,9 @@ def compute_similarity(query, frame):
     text = clip.tokenize([query]).to(device)
 
     with torch.no_grad():
+        # Encode image and query to common semantic space using model
         image_features = model.encode_image(image)
         text_features = model.encode_text(text)
-
-        logits_per_image, logits_per_text = model(image, text)
-        probs = logits_per_image.softmax(dim=-1)
 
         # Compute similarity using dot product
         dot = (100.0 * image_features @ text_features.T).squeeze()
@@ -37,6 +35,7 @@ def compute_similarity(query, frame):
 
 def compute_frame_similarities(filename, query):
     cap = cv2.VideoCapture(filename)
+    total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
     similarities = []
 
     frame_index = 0
@@ -50,9 +49,8 @@ def compute_frame_similarities(filename, query):
         similarities.append(similarity.item())
 
         frame_index += 1
-        print(f"Frame number {frame_index}/105", end="\r", flush=True)
+        print(f"Frame number {frame_index}/{total_frames}", end="\r", flush=True)
 
-    print('num frames: ', frame_index + 1)
     cap.release() # Release resources
     return similarities
 
@@ -62,8 +60,14 @@ def compute_accuracy_classes(similarities, method='dbscan'):
     if method == 'dbscan':
         # Run DBSCAN
         dbscan = DBSCAN(eps=2, min_samples=2)
-        # Labels are 0 to #clusters-1
         labels = dbscan.fit_predict(similarities)
+        # We want the labels are 0 to #clusters-1, but dbscan assigns -1 for "noise points"
+        # We'll treat noise points as additional clusters
+        new_cluster_label = len(set(labels)) - 1
+        for i in range(len(labels)):
+            if labels[i] == -1:
+                labels[i] = new_cluster_label
+                new_cluster_label += 1
 
     # For now on, we want similarities to be standard np array
     similarities = similarities.reshape((-1,))

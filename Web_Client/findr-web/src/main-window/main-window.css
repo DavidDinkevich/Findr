@@ -23,6 +23,21 @@
   margin: 6% 20% 10% 20%;
 }
 
+.logo_header {
+  position: relative;
+  height: 130px; 
+  margin-bottom: 10px;
+}
+
+.logo {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 250px; /* Adjust to desired size */
+  height: auto; /* Adjust to desired size */
+} 
+
 #query_bar {
   margin-top: 50px;
   margin-right: auto;
@@ -34,11 +49,13 @@
 
 #logo {
   display: flex;
-  justify-content: center;
+  margin: auto;
+  text-align: center;
   font-size: 60px;
   font-weight: 600;
   margin-bottom: 50px;
 }
+
 
 #video-drop-zone {
   border: '1px solid black';

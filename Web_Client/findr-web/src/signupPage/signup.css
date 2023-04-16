@@ -1,0 +1,92 @@
+.signup-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #ece4dc;
+  }
+  
+  .logo-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .logo-container.left {
+    justify-content: center;
+  }
+  
+  .logo-container.right {
+    justify-content: center;
+  }
+  
+  .logo-container img {
+    width: 250px;
+    height: 130px; 
+  }
+
+  .form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 30%;
+  }
+  
+  .form-header {
+    display: flex;
+    align-items: center;
+  }
+
+  .form-container img {
+    width: 100px;
+    height: 50px;
+  }
+  
+  h2 {
+    margin-right: 10px;
+    font-style: italic
+  }
+  
+  
+  .signup-form {
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 30px;
+    background-color: #ADD8E6;
+    width: 100%;
+  }
+  
+  .form-row {
+    margin-bottom: 10px;
+  }
+  
+  input[type=text], input[type=email], input[type=password] {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    font-size: 16px;
+  }
+  
+  button[type=submit] {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #0066cc;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  button[type=submit]:hover {
+    background-color: #0052a3;
+  }
+
+
+  

@@ -1,14 +1,15 @@
+import argparse
+import json
 import torch
 import clip
 from PIL import Image
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.cluster import KMeans
-from sklearn.metrics import silhouette_score
 from sklearn.cluster import DBSCAN
 import utils
 
+# LOAD CLIP
 device = "cuda" if torch.cuda.is_available() else "cpu"
 print('Using device: ', device)
 model, preprocess = clip.load("ViT-B/32", device=device)
@@ -46,7 +47,7 @@ def compute_frame_similarities(filename, query):
 
         # Compute similarity
         similarity = compute_similarity(query, frame)
-        similarities.append((frame_index, similarity.item()))
+        similarities.append(similarity.item())
 
         frame_index += 1
         print(f"Frame number {frame_index}/105", end="\r", flush=True)
@@ -71,77 +72,68 @@ def compute_accuracy_classes(similarities, method='dbscan'):
     accuracy_classes = []
     for label in range(len(set(labels))):
         # Compute the frame indices in the accuracy class
-        frame_indices_in_acc_class = [(i,) for i in range(len(similarities)) if labels[i] == label]
+        frame_indices_in_acc_class = [i for i in range(len(similarities)) if labels[i] == label]
+        # Compute the mean class accuracy
         avg_acc_in_class = np.take(similarities, frame_indices_in_acc_class).mean()
+        # Merge the intervals in the accuracy class
+        intervals = [(n, n) for n in frame_indices_in_acc_class]
+        intervals = utils.merge_contiguous_tuples(intervals)
 
-        # print(f'{avg_acc_in_class}:  {str(frame_indices_in_acc_class)}')
-        accuracy_classes.append((avg_acc_in_class, frame_indices_in_acc_class))
+        # print(f'{avg_acc_in_class}:  {str(intervals)}')
+        accuracy_classes.append((avg_acc_in_class, intervals))
     return accuracy_classes
-
-        # Example
-        # [1,0,1]
-        # [(0,0.2),(1,0.9),(2,0.3)]
-        # Result: [ (0.25, [0,2]), (0.9, [1]) ]
 
 
 def merge_contiguous_intervals(accuracy_classes):
     new_acc_classes = []
     for (acc, intervals) in accuracy_classes:
-        intervals = [(x,x) for (x,) in intervals] # TODO: DELETE!!!
         merged_intervals = utils.merge_contiguous_tuples(intervals)
         new_acc_classes.append((acc, merged_intervals))
     return new_acc_classes
 
 
 if __name__ == '__main__':
-    # Load video frames
-    video = 'giraffe_and_hippo.mp4'
-    query = 'a giraffe'
-    # hippo: 15 to 87
+    # Create an ArgumentParser object
+    parser = argparse.ArgumentParser(description='Process video data and create a transcript.')
 
-    # Get frames
-    frames_and_similarities = compute_frame_similarities(video, query)
-    similarities = np.array([t[1] for t in frames_and_similarities]).reshape(-1, 1)
+    # Add arguments to the parser
+    parser.add_argument('video_path', type=str, help='path to the video file')
+    parser.add_argument('query', type=str, help='query to search for in the video')
+    parser.add_argument('-o', '--json_output_path', type=str, default='clip_results.txt', help='json output file path')
+    parser.add_argument('-p', '--plot_results', action='store_true', help='whether to plot the results')
+
+    # Parse the arguments
+    args = parser.parse_args()
+
+    # MAIN MODEL BEHAVIOR
+
+    # Get frames and compute the similarities for each
+    frame_similarities = compute_frame_similarities(args.video_path, args.query)
+    frame_similarities = np.array(frame_similarities).reshape(-1,1) # Reshape as column vec for later
 
     # Compute accuracy classes
-    accuracy_classes = compute_accuracy_classes(similarities)
-    accuracy_classes = merge_contiguous_intervals(accuracy_classes)
+    accuracy_classes = compute_accuracy_classes(frame_similarities)
 
-    # Set up the figure
-    fig, ax = plt.subplots()
+    # Write accuracy classes to file in JSON
+    with open(args.json_output_path, 'w') as f:
+        json.dump(accuracy_classes, f)
 
-    # Plot each array of ints as lines in a different color
-    for i, (x, y) in enumerate(accuracy_classes):
-        for segment in y:
-            if len(segment) == 2:
-                start, end = segment
-            else:
-                start, end = segment[0], segment[0] + 1
-            ax.plot([start, end], [x, x], c=f'C{i}')
+    if args.plot_results:
+        # Set up the figure
+        fig, ax = plt.subplots()
 
-    # Set the x and y axis labels
-    plt.xlabel('Video Frames')
-    plt.ylabel('Match Confidence')
-    plt.title(query)
+        # Plot each array of ints as lines in a different color
+        for i, (x, y) in enumerate(accuracy_classes):
+            for segment in y:
+                start, end = segment[0], segment[1] + 1
+                ax.plot([start, end], [x, x], c=f'C{i}')
 
-    # Show the plot
-    plt.show()
+        # Set the x and y axis labels
+        plt.xlabel('Video Frames')
+        plt.ylabel('Match Confidence')
+        plt.title(args.query)
 
-# from sentence_transformers import SentenceTransformer
-# model = SentenceTransformer('all-MiniLM-L6-v2')
-#
-# #Our sentences we like to encode
-# sentences = ['This framework generates embeddings for each input sentence',
-#     'Sentences are passed as a list of string.',
-#     'The quick brown fox jumps over the lazy dog.']
-#
-# #Sentences are encoded by calling model.encode()
-# embeddings = model.encode(sentences)
-#
-# #Print the embeddings
-# for sentence, embedding in zip(sentences, embeddings):
-#     print("Sentence:", sentence)
-#     print("Embedding:", embedding)
-#     print("")
+        # Show the plot
+        plt.show()
 
 

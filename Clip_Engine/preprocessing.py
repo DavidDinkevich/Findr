@@ -25,14 +25,11 @@ def _get_significant_frames(filename, similarity_threshold, skip_rate):
             continue
 
         _, frame = cap.retrieve() # Decode
-        print(f"Frame number {frame_index}/{total_frames}")
+        # print(f"Frame number {frame_index}/{total_frames}")
 
         if frame_index == 0: # First frame
-            # Store original video shape
-            original_video_shape = frame.shape
             # Update model frame: first convert frame to grayscale, then flatten
             curr_model_frame = frame.flatten().astype('float')
-            print('NEW MODEL')
             significant_frames.append(frame)
         else: # Compute similarity between this frame and the model frame
             # Convert frame to grayscale and flatten
@@ -40,7 +37,7 @@ def _get_significant_frames(filename, similarity_threshold, skip_rate):
 
             # Compute cosine similarity between the two frames
             sim = np.dot(curr_model_frame, processed_frame) / (np.linalg.norm(curr_model_frame) * np.linalg.norm(processed_frame))
-            print(f'Similarity is: {sim}')
+            # print(f'Similarity is: {sim}')
             if sim < similarity_threshold:
                 # Update model frame: first convert frame to grayscale, then flatten
                 curr_model_frame = frame.flatten().astype('float')
@@ -54,7 +51,8 @@ def _get_significant_frames(filename, similarity_threshold, skip_rate):
     # Special case: add last interval
     reconstruction_map.append((model_frame_index, frame_index - 1))
 
-    print(f'Num kept: {len(significant_frames)}')
+    print(f'Number of frames kept: '
+          f'{len(significant_frames)}/{total_frames} ({len(significant_frames)/total_frames * 100:.2f}%)')
     cap.release() # Release resources
     return significant_frames, reconstruction_map, fps, width, height
 
@@ -79,4 +77,21 @@ def compress_video(input_file, output_file, similarity_threshold=0.9, skip_rate=
     end = time.time()
     print(end - start)
     return reconstruction_map
+
+
+def remap_results_to_original_video(model, compressed_results, reconstruction_map):
+    if model == 'CLIP':
+        for frame in compressed_results:
+            for interval in frame['intervals']:
+                interval[0] = reconstruction_map[interval[0]][0]
+                interval[1] = reconstruction_map[interval[1]][1]
+    elif model == 'YOLO':
+        for frame in compressed_results:
+            # Replace "frame_index" with "interval"
+            frame['interval'] = reconstruction_map[frame['frame_index']]
+            del frame['frame_index']
+
+    return compressed_results
+
+
 

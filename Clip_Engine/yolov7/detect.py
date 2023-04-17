@@ -141,7 +141,7 @@ def detect(save_img=False):
                     matched_frames.append(frame_match)
 
             # Print time (inference + NMS)
-            print(f'{s}Done. ({(1E3 * (t2 - t1)):.1f}ms) Inference, ({(1E3 * (t3 - t2)):.1f}ms) NMS')
+            # print(f'{s}Done. ({(1E3 * (t2 - t1)):.1f}ms) Inference, ({(1E3 * (t3 - t2)):.1f}ms) NMS')
 
             # Stream results
             if view_img:
@@ -172,7 +172,7 @@ def detect(save_img=False):
         s = f"\n{len(list(save_dir.glob('labels/*.txt')))} labels saved to {save_dir / 'labels'}" if save_txt else ''
         #print(f"Results saved to {save_dir}{s}")
 
-    print(f'Done. ({time.time() - t0:.3f}s)')
+    # print(f'Done. ({time.time() - t0:.3f}s)')
 
 
 if __name__ == '__main__':
@@ -199,7 +199,7 @@ if __name__ == '__main__':
     parser.add_argument('--exist-ok', action='store_true', help='existing project/name ok, do not increment')
     parser.add_argument('--no-trace', action='store_true', help='don`t trace model')
     opt = parser.parse_args()
-    print(opt)
+    # print(opt)
 
     with torch.no_grad():
         if opt.update:  # update all models (to fix SourceChangeWarning)
@@ -209,9 +209,7 @@ if __name__ == '__main__':
         else:
             detect()
 
-    print('matches are')
-    print(matched_frames)
-
     # Write matched frames structure to file in JSON
     with open(opt.json_output_path, 'w') as f:
         json.dump(matched_frames, f)
+

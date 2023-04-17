@@ -1,7 +1,7 @@
 import argparse
 import subprocess
 import json
-import os
+import time
 import numpy as np
 
 
@@ -23,17 +23,24 @@ def add_average_accuracy_to_matches(matches):
         frame_json['accuracy'] = np.array(accuracies).mean()
 
 if __name__ == '__main__':
+    yolo_start = time.time()
+
     parser = argparse.ArgumentParser()
-    parser.add_argument('--source', type=str, default='inference/images', help='source')  # file/folder, 0 for webcam
-    parser.add_argument('--query', type=str, help='source')  # file/folder, 0 for webcam
+    parser.add_argument('--source', type=str, help='source')
+    parser.add_argument('--query', type=str, help='query')  # file/folder, 0 for webcam
+    parser.add_argument('--o', type=str, help='output json')
     opt = parser.parse_args()
 
+    # File to store output
+    results_json = opt.o
+
     # Run yolo
-    compressed_matches_json = 'compressed_matches.json'
-    subprocess.call(f'python .\yolov7\detect.py --weights .\yolov7\yolov7-e6e.pt --source {opt.source} --json_output_path {compressed_matches_json} --nosave --save-txt --save-conf'.split())
+    subprocess.call(
+        ['python', '.\yolov7\detect.py', '--weights', '.\yolov7\yolov7-e6e.pt', '--source', opt.source,
+                '--json_output_path', results_json, '--nosave', '--save-txt', '--save-conf'])
 
     # Read compressed matches json and filter with query
-    with open(compressed_matches_json, 'r') as f:
+    with open(results_json, 'r') as f:
         compressed_matches = json.load(f)
 
     # Keep matches that relate to query, and overall frame accuracy for each frame
@@ -41,8 +48,8 @@ if __name__ == '__main__':
     add_average_accuracy_to_matches(filtered_compressed_matches)
 
     # Write to file (replace the file yolo used)
-    with open(compressed_matches_json, 'w') as f:
+    with open(results_json, 'w') as f:
         json.dump(filtered_compressed_matches, f)
 
+    print(f'YOLO terminated. Time elapsed: {time.time() - yolo_start}')
 
-    print('done with yolo')

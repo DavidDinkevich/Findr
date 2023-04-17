@@ -8,16 +8,18 @@ def _get_significant_frames(filename, similarity_threshold, skip_rate):
     height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
     fps = cap.get(cv2.CAP_PROP_FPS)
 
-    original_video_shape = None # Will update this after reading first frame
     significant_frames = []
+    reconstruction_map = []
 
     frame_index = 0
     curr_model_frame = None
+    model_frame_index = 0
     while True:
         ret = cap.grab()
         if not ret: # haven't reached the end yet
             break
-        # Skip frames
+
+        # Optimization: Skip frames
         if frame_index % skip_rate != 0:
             frame_index += 1
             continue
@@ -33,7 +35,6 @@ def _get_significant_frames(filename, similarity_threshold, skip_rate):
             print('NEW MODEL')
             significant_frames.append(frame)
         else: # Compute similarity between this frame and the model frame
-
             # Convert frame to grayscale and flatten
             processed_frame = frame.flatten().astype('float')
 
@@ -44,12 +45,18 @@ def _get_significant_frames(filename, similarity_threshold, skip_rate):
                 # Update model frame: first convert frame to grayscale, then flatten
                 curr_model_frame = frame.flatten().astype('float')
                 significant_frames.append(frame)
+                # Add entry to reconstruction map
+                reconstruction_map.append((model_frame_index, frame_index - 1))
+                model_frame_index = frame_index
 
         frame_index += 1
 
+    # Special case: add last interval
+    reconstruction_map.append((model_frame_index, frame_index - 1))
+
     print(f'Num kept: {len(significant_frames)}')
     cap.release() # Release resources
-    return significant_frames, fps, width, height
+    return significant_frames, reconstruction_map, fps, width, height
 
 
 def _create_compressed_video(significant_frames, output_filename, fps, width, height):
@@ -65,9 +72,11 @@ def _create_compressed_video(significant_frames, output_filename, fps, width, he
 
 def compress_video(input_file, output_file, similarity_threshold=0.9, skip_rate=3):
     import time
-    sig_frames, fps, w, h = _get_significant_frames(input_file, similarity_threshold=0.9, skip_rate=3)
+    sig_frames, reconstruction_map, fps, w, h = \
+        _get_significant_frames(input_file, similarity_threshold=0.9, skip_rate=3)
     _create_compressed_video(sig_frames, output_file, fps, w, h)
     start = time.time()
     end = time.time()
     print(end - start)
+    return reconstruction_map
 

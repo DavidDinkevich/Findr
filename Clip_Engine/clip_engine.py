@@ -16,7 +16,7 @@ clip_start = time.time()
 device = "cuda" if torch.cuda.is_available() else "cpu"
 print('Using device: ', device)
 model, preprocess = clip.load("ViT-B/32", device=device)
-print('Finished loading CLIP')
+print(f'Finished loading CLIP. Time Elapsed: {time.time() - clip_start}')
 
 def compute_similarity(query, frame):
     # Convert opencv frame to PIL image (what CLIP uses)

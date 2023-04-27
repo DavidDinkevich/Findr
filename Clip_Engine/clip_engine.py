@@ -60,6 +60,9 @@ def compute_frame_similarities(filename, query):
 
 
 def compute_accuracy_classes(similarities, method='dbscan'):
+    if len(similarities) == 0:
+        return []
+
     labels = None
     if method == 'dbscan':
         # Run DBSCAN

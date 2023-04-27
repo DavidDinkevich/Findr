@@ -1,73 +1,56 @@
-import torch
-import clip
-from PIL import Image
-import cv2
-import numpy as np
-
-device = "cuda" if torch.cuda.is_available() else "cpu"
-print('Using device: ', device)
-model, preprocess = clip.load("ViT-B/32", device=device)
-print('Finished loading model')
-
-def compute_similarity(query, frame):
-    # Convert opencv frame to PIL image (what CLIP uses)
-    pil_image = Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
-    image = preprocess(pil_image).unsqueeze(0).to(device)
-    text = clip.tokenize([query]).to(device)
-
-    with torch.no_grad():
-        image_features = model.encode_image(image)
-        text_features = model.encode_text(text)
-
-        logits_per_image, logits_per_text = model(image, text)
-        probs = logits_per_image.softmax(dim=-1).cpu().numpy()
-        probs = np.around(probs, decimals=4)
-
-        # Compute similarity using dot product
-        similarity = (100.0 * image_features @ text_features.T).squeeze()
-
-    return similarity
-    # # print("Label probs:", probs)  # prints: [[0.9927937  0.00421068 0.00299572]]
-    # print('similarity:', probs[0][0])
-    # return probs[0][0]
+from preprocessing import compress_video, remap_results_to_original_video
+import subprocess
+import time
+import json
+import argparse
 
 
-def find_matched_frames(filename, query, similarity_threshold):
-    cap = cv2.VideoCapture(filename)
-    matched_frames = []
-
-    frame_index = 0
-    while True:
-        ret, frame = cap.read()
-        if not ret: # haven't reached the end yet
-            break
-
-        # Compute similarity
-        similarity = compute_similarity(query, frame)
-
-        if similarity > similarity_threshold:
-            print(f'Similarity {similarity} - match')
-            matched_frames.append((frame_index, similarity))
-        else:
-            print(f'Similarity {similarity} - no match')
-
-        frame_index += 1
-
-    print('num frames: ', frame_index + 1)
-    cap.release() # Release resources
-    return matched_frames
-
-if __name__ == '__main__':
-    # Load video frames
-    video = 'giraffe_and_hippo.mp4'
-    query = 'giraffe'
-    matched_frames = find_matched_frames(video, query, similarity_threshold=2200)
-    print(matched_frames)
-
-    # hippo: 15 to 87
-    # giraffe
+def reconstruct_and_write_original_intervals(model, intervals_file, reconstruction_map):
+    with open(intervals_file, 'r+') as f:
+        intervals = json.load(f)
+        reconstructed_intervals = remap_results_to_original_video(model, intervals, reconstruction_map)
+        f.seek(0)
+        f.truncate()
+        json.dump(reconstructed_intervals, f)
 
 
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--source', type=str, help='source')
+    parser.add_argument('--query', type=str, help='query')
+    opt = parser.parse_args()
 
+    start = time.time()
+
+    # Compress the video
+    print('Compressing video...')
+    compression_start = time.time()
+    compressed_name = f'compressed_{opt.source}'
+    reconstruction_map = compress_video(
+            input_file=opt.source, output_file=compressed_name, similarity_threshold=0.9)
+    print(f'Finished compressing video. Time elapsed: {time.time() - compression_start}')
+
+    # Run CLIP in subprocess
+    print(f'Starting CLIP...')
+    clip_results_json = 'clip_results.json'
+    clip_proc = subprocess.Popen(
+        ['python', 'clip_engine.py', '--source', compressed_name, '--query', opt.query, '--o', clip_results_json])
+
+    # Run YOLO in subprocess
+    print(f'Starting YOLO...')
+    yolo_start = time.time()
+    yolo_results_json = 'yolo_results.json'
+    yolo_proc = subprocess.Popen(
+        ['python', 'yolo_engine.py', '--source', compressed_name, '--query', opt.query, '--o', yolo_results_json])
+
+    # Wait for subprocesses
+    clip_proc.wait()
+    yolo_proc.wait()
+
+    # Reconstruct intervals for original video
+    reconstruct_and_write_original_intervals('CLIP', clip_results_json, reconstruction_map)
+    reconstruct_and_write_original_intervals('YOLO', yolo_results_json, reconstruction_map)
+
+    print(f'Total time elapsed: {time.time() - start}')
 
 

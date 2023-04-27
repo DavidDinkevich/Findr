@@ -2,23 +2,32 @@ import cv2
 import numpy as np
 import threading
 import time
+import multiprocessing
 
 
-def compress_video(input_file, output_file, similarity_threshold=0.9, skip_rate=3):
+def compress_video(input_file, output_file, similarity_threshold=0.9):
     # Open video
     cap = cv2.VideoCapture(input_file)
+    n_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
 
-    # COMPUTE NUMBER OF THREADS
-    # num_threads = _compute_optimal_num_threads(input_file)
-    num_threads = 1
+    # COMPUTE NUMBER OF THREADS AND SKIP RATE
+    # Rather arbitrary...
+    num_threads = 1 if n_frames < 1000 else int(multiprocessing.cpu_count() / 2)
+    skip_rate = 1 if n_frames < 100 else int(round(0.0008 * n_frames + 3))
+
+    print(f'Num frames: {n_frames}')
+    print(f'Num threads: {num_threads}')
+    print(f'Skip rate: {skip_rate}')
 
     # GET SIGNIFICANT FRAMES
     if num_threads == 1:
+        print('In serial')
         sig_frames, reconstruction_map = \
-            get_sig_frames_serial(cap, similarity_threshold, skip_rate)
+            get_sig_frames_serial(input_file, similarity_threshold, skip_rate)
     else:
+        print('In parallel')
         sig_frames, reconstruction_map = \
-            get_sig_frames_parallel(cap, 6, similarity_threshold, skip_rate)
+            get_sig_frames_parallel(input_file, 6, similarity_threshold, skip_rate)
 
     # OUTPUT FILE
     # Define output video properties
@@ -94,12 +103,14 @@ def get_sig_frames_parallel(video_path, num_workers, similarity_threshold, skip_
     return significant_frames, reconstruction_map
 
 
-def get_sig_frames_serial(cap, similarity_threshold, skip_rate):
+def get_sig_frames_serial(video_path, similarity_threshold, skip_rate):
+    cap = cv2.VideoCapture(video_path)
     total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
 
     significant_frames, reconstruction_map = \
         _get_sig_frames_in_interval(cap, (0, total_frames), similarity_threshold, skip_rate)
 
+    cap.release()
     return significant_frames, reconstruction_map
 
 
@@ -156,7 +167,6 @@ def _get_sig_frames_in_interval(cap, interval, similarity_threshold, skip_rate):
     # Special case: add last interval
     reconstruction_map.append((model_frame_index, frame_index - 1))
 
-    cap.release()  # Release resources
     return significant_frames, reconstruction_map
 
 

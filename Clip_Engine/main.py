@@ -27,7 +27,7 @@ if __name__ == "__main__":
     compression_start = time.time()
     compressed_name = f'compressed_{opt.source}'
     reconstruction_map = compress_video(
-            input_file=opt.source, output_file=compressed_name, similarity_threshold=0.9, skip_rate=20)
+            input_file=opt.source, output_file=compressed_name, similarity_threshold=0.9)
     print(f'Finished compressing video. Time elapsed: {time.time() - compression_start}')
 
     # Run CLIP in subprocess

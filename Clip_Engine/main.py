@@ -1,5 +1,5 @@
-import subprocess
 from preprocessing import compress_video, remap_results_to_original_video
+import subprocess
 import time
 import json
 import argparse
@@ -23,19 +23,21 @@ if __name__ == "__main__":
     start = time.time()
 
     # Compress the video
+    print('Compressing video...')
     compression_start = time.time()
     compressed_name = f'compressed_{opt.source}'
-    reconstruction_map = compress_video(opt.source, output_file=compressed_name, similarity_threshold=0.9, skip_rate=3)
+    reconstruction_map = compress_video(
+            input_file=opt.source, output_file=compressed_name, similarity_threshold=0.9, skip_rate=20)
     print(f'Finished compressing video. Time elapsed: {time.time() - compression_start}')
 
     # Run CLIP in subprocess
-    print(f'Starting CLIP')
+    print(f'Starting CLIP...')
     clip_results_json = 'clip_results.json'
     clip_proc = subprocess.Popen(
         ['python', 'clip_engine.py', '--source', compressed_name, '--query', opt.query, '--o', clip_results_json])
 
     # Run YOLO in subprocess
-    print(f'Starting YOLO')
+    print(f'Starting YOLO...')
     yolo_start = time.time()
     yolo_results_json = 'yolo_results.json'
     yolo_proc = subprocess.Popen(

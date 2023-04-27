@@ -2,8 +2,15 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import db
 from fastapi import FastAPI, HTTPException
-
+from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI()
+
+app.add_middleware(CORSMiddleware,
+                   allow_origins="*",
+                   allow_credentials=True,
+                   allow_methods=["*"],
+                   allow_headers=["*"]
+                   )
 
 path = "credentials\privateAccountKey.json"
 cred = credentials.Certificate(path)
@@ -26,17 +33,28 @@ def get_user(username: str):
     else:
         raise HTTPException(status_code=404, detail="User not found")
 
+
 @app.post("/users/")
-def add_user(username: str, age: int):
+def add_user(first_name: str, last_name: str,username: str, password: str, email: str):
     # Check if the user already exists
-    existing_user = ref.child('users').child(username).get()
-    if existing_user is not None:
-        return {"error": "User already exists"}
+    print(first_name, last_name,username, password, email)
+    existing_user = ref.child('users').order_by_child('username').equal_to(username).get()
+    for user_key, user_val in existing_user.items():
+        if user_val.get('password') == password:
+            return {"message": "User already exists"}
 
     # Insert the user into the database
-    user = {"username": username, "age": age}
+    user = {
+        "first_name": first_name,
+        "last_name": last_name,
+        "username": username,
+        "password": password,
+        "email": email,
+
+    }
     ref.child('users').child(username).set(user)
     return {"message": "User added to database"}
+
 
 @app.get("/all_users")
 def get_all_users():
@@ -74,6 +92,16 @@ def update_user(username: str, age: int = None):
     except Exception as e:
         # Handle any other exceptions
         raise HTTPException(status_code=500, detail=str(e))
+
+# Endpoint for checking username and password
+@app.get('/login')
+def check_login(username: str, password: str):
+    all_users = ref.child('users').get()
+    if all_users:
+        for u in all_users.values():
+            if u.get('username') == username and u.get('password') == password:
+                return {'message': 'Login successful'}
+    raise HTTPException(status_code=401, detail='Invalid credentials')
 
 @app.post("/clear")
 def clear_collection():

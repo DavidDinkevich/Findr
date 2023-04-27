@@ -1,13 +1,3 @@
-// export function MainWindow() {
-
-
-//     return (<>
-
-
-//     </>);
-// }
-
-
 import React, { useState, useEffect } from 'react';
 import Dropzone from 'react-dropzone';
 import ReactPlayer from 'react-player';

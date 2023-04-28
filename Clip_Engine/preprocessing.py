@@ -12,20 +12,18 @@ def compress_video(input_file, output_file, similarity_threshold=0.9):
 
     # COMPUTE NUMBER OF THREADS AND SKIP RATE
     # Rather arbitrary...
-    num_threads = 1 if n_frames < 1000 else int(multiprocessing.cpu_count() / 2)
+    n_threads = 1 if n_frames < 1000 else int(multiprocessing.cpu_count() / 2)
     skip_rate = 1 if n_frames < 100 else int(round(0.0008 * n_frames + 3))
 
     print(f'Num frames: {n_frames}')
-    print(f'Num threads: {num_threads}')
+    print(f'Num threads: {n_threads}')
     print(f'Skip rate: {skip_rate}')
 
     # GET SIGNIFICANT FRAMES
-    if num_threads == 1:
-        print('In serial')
+    if n_threads == 1:
         sig_frames, reconstruction_map = \
             get_sig_frames_serial(input_file, similarity_threshold, skip_rate)
     else:
-        print('In parallel')
         sig_frames, reconstruction_map = \
             get_sig_frames_parallel(input_file, 6, similarity_threshold, skip_rate)
 

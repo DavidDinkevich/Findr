@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Logo from '../only_logo.png';
+import axios from 'axios';
 import './login-page.css';
 
 const Login = () => {
@@ -9,14 +10,19 @@ const Login = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e, username, password) => {
     e.preventDefault();
-    // handle login logic here
-    if (username === 'cor' && password === 'cor') {
-      navigate('/uploadVideo');
-    }
-    else {
-      setErrorMessage('Invalid username or password');
+    try {
+      const response = await axios.get(`http://localhost:5002/login?username=${username}&password=${password}`);
+      console.log(response.data)
+      // handle login logic here
+      if (response.status === 200) {
+        navigate('/uploadVideo');
+      }
+    } catch (error) {
+      if (error.response.status === 401) {
+        setErrorMessage('Invalid username or password');
+      }
     }
   };
 
@@ -30,7 +36,7 @@ const Login = () => {
       </div>
     <div className="login-container">
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={(e) => handleSubmit(e, username, password)}>
         <h2>Login</h2>
         <label>
           Username:

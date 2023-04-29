@@ -86,7 +86,7 @@ if __name__ == '__main__':
     results_json = opt.o
 
     # Load model
-    load_yolo()
+    load_model()
 
     # Write matched frames structure to file in JSON
     matched_frames = run_yolo(opt.source)

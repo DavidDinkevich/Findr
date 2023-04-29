@@ -8,16 +8,15 @@ import cv2
 device = None
 model = None
 
-def load_yolo(version='yolov5'):
-    print('Loading yolo...')
+def load_model():
+    print('Loading yolov5...')
     t1 = time.time()
-    if version == 'yolov5':
-        global device, model
-        device = 'cuda' if torch.cuda.is_available() else 'cpu'
-        print(f'Using device: {device}')
-        model = torch.hub.load('ultralytics/yolov5', 'yolov5s', pretrained=True).to(device)
-        model.eval()
-        print(f'YOLO: finished loading. Time elapsed: {time.time() - t1}')
+    global device, model
+    device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    print(f'Using device: {device}')
+    model = torch.hub.load('ultralytics/yolov5', 'yolov5s', pretrained=True).to(device)
+    model.eval()
+    print(f'YOLO: finished loading. Time elapsed: {time.time() - t1}')
 
 
 def run_yolo(input_path):
@@ -86,10 +85,11 @@ if __name__ == '__main__':
     # File to store output
     results_json = opt.o
 
-    # Run yolo
-    load_yolo(version='yolov5')
-    matched_frames = run_yolo(opt.source)
+    # Load model
+    load_yolo()
+
     # Write matched frames structure to file in JSON
+    matched_frames = run_yolo(opt.source)
     with open(results_json, 'w') as f:
         json.dump(matched_frames, f)
 

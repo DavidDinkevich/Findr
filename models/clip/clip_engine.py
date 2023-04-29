@@ -10,13 +10,21 @@ import matplotlib.pyplot as plt
 from sklearn.cluster import DBSCAN
 import utils
 
-clip_start = time.time()
+
+# GLOBALS
+device = None
+model = None
+preprocess = None
+
 
 # LOAD CLIP
-device = "cuda" if torch.cuda.is_available() else "cpu"
-print('Using device: ', device)
-model, preprocess = clip.load("ViT-B/32", device=device)
-print(f'Finished loading CLIP. Time Elapsed: {time.time() - clip_start}')
+def load_model():
+    global model, device, preprocess
+    start = time.time()
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    print('Using device: ', device)
+    model, preprocess = clip.load("ViT-B/32", device=device)
+    print(f'Finished loading CLIP. Time Elapsed: {time.time() - start}')
 
 def compute_similarity(query, frame):
     # Convert opencv frame to PIL image (what CLIP uses)
@@ -106,10 +114,10 @@ def merge_contiguous_intervals(accuracy_classes):
 
 
 if __name__ == '__main__':
+    clip_start = time.time()
+
     # Create an ArgumentParser object
     parser = argparse.ArgumentParser(description='Process video data and create a transcript.')
-
-    # Add arguments to the parser
     parser.add_argument('--source', type=str, help='path to the video file')
     parser.add_argument('--query', type=str, help='query to search for in the video')
     parser.add_argument('--o', '--json_output_path', type=str, default='clip_results.txt', help='json output file path')
@@ -121,6 +129,9 @@ if __name__ == '__main__':
     plot_results = args.p
 
     # MAIN MODEL BEHAVIOR
+
+    # Load the model
+    load_model()
 
     # Get frames and compute the similarities for each
     frame_similarities = compute_frame_similarities(args.source, args.query)

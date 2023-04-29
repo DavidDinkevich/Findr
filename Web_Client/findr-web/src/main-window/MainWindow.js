@@ -2,19 +2,57 @@ import React, { useState, useEffect } from 'react';
 import Dropzone from 'react-dropzone';
 import ReactPlayer from 'react-player';
 import './main-window.css';
+import axios from 'axios';
 import Logo from '../only_logo.png';
 
 function VideoUploader() {
   const [videoFile, setVideoFile] = useState(null);
 
-  const handleDrop = (acceptedFiles) => {
+
+  const handleDrop = async (acceptedFiles) => {
     const file = acceptedFiles[0];
+  
     if (file.type.startsWith('video/')) {
       setVideoFile(file);
+      
+      // Create a FormData object to send the file as a binary payload
+      const formData = new FormData();
+      formData.append('file', file);
+  
+      // Send the file using an Axios POST request
+      try {
+        const response = await axios.post('http://localhost:5002/uploadfile/', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        });
+  
+        console.log('File uploaded successfully:', response.data);
+      } catch (error) {
+        console.error('Error uploading file:', error);
+      }
     } else {
       console.log('Please upload a video file.');
     }
   };
+  // const handleDrop = async (acceptedFiles) => {
+  //   const file = acceptedFiles[0];
+  //   const user = 'user'
+  //   if (file.type.startsWith('video/')) {
+  //     setVideoFile(file);
+  //     const formData = new FormData();
+  //     formData.append('video', file);
+  //     formData.append('username', user);
+  //     const response = await axios.post('http://localhost:5002/upload_video', formData, {
+  //       headers: {
+  //         'Content-Type': 'multipart/form-data'
+  //       }
+  //     });
+  //     console.log(response.status)
+  //   } else {
+  //     console.log('Please upload a video file.');
+  //   }
+  // };
 
   const button_uploadNewVideo = () => {
     const input = document.createElement('input');

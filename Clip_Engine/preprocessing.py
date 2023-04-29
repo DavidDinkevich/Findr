@@ -3,6 +3,7 @@ import numpy as np
 import threading
 import time
 import multiprocessing
+import json
 
 
 def compress_video(input_file, output_file, similarity_threshold=0.9):
@@ -57,6 +58,15 @@ def remap_results_to_original_video(model, compressed_results, reconstruction_ma
             del frame['frame_index']
 
     return compressed_results
+
+
+def reconstruct_and_write_original_intervals(model, intervals_file, reconstruction_map):
+    with open(intervals_file, 'r+') as f:
+        intervals = json.load(f)
+        reconstructed_intervals = remap_results_to_original_video(model, intervals, reconstruction_map)
+        f.seek(0)
+        f.truncate()
+        json.dump(reconstructed_intervals, f)
 
 
 def get_sig_frames_parallel(video_path, num_workers, similarity_threshold, skip_rate):

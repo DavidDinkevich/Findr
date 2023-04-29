@@ -1,8 +1,14 @@
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import db
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException,File, UploadFile
+from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
+import asyncio
+
+import aiofiles
+import os
+
 app = FastAPI()
 
 app.add_middleware(CORSMiddleware,
@@ -102,6 +108,21 @@ def check_login(username: str, password: str):
             if u.get('username') == username and u.get('password') == password:
                 return {'message': 'Login successful'}
     raise HTTPException(status_code=401, detail='Invalid credentials')
+
+@app.post("/uploadfile/")
+async def create_upload_file(file: UploadFile = File(...)):
+    contents = await file.read()  # binary read
+
+    # Save file to disk
+    filename = file.filename
+    async with aiofiles.open(filename, 'wb') as f:
+        await f.write(contents)
+
+
+    # Return response with saved file
+    file_path = os.path.abspath(filename)
+    return FileResponse(file_path, media_type="video/mp4", filename=filename)
+
 
 @app.post("/clear")
 def clear_collection():

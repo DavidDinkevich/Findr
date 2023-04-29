@@ -27,17 +27,24 @@ def process_query(query_dict):
     print(f'Finished compressing video. Time elapsed: {time.time() - compression_start}')
 
     # Run models
-    procs = []
+    procs = {}
     for model_name in query_dict['models']:
         proc = run_model(model_name, query_dict['query'], compressed_name)
-        procs.append(proc)
+        procs[model_name] = proc
 
     # Wait for subprocesses
-    for proc in procs:
-        proc.wait()
+    for model_name in procs:
+        procs[model_name].wait()
+        # Check if model succeeded
+        return_code = procs[model_name].returncode
+        if return_code != 0:
+            print(f'Model {model_name} CRASHED with exit code: {return_code}')
 
     # Reconstruct intervals for original video
     for model_name in query_dict['models']:
+        # Skip procs that failed
+        if procs[model_name].returncode != 0:
+            continue
         if 'clip' in model_name:
             model_type = 'clip'
         elif 'yolo' in model_name:

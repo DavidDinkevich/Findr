@@ -1,17 +1,63 @@
+import multiprocessing
+import threading
+import os
+import signal
+
 from preprocessing import compress_video, reconstruct_and_write_original_intervals
 import subprocess
 import time
 import os
 import json
 from model_server import start_server, get_next_query, send_response
-
+import yolo.yolov5.yolov5_engine as yolov5
 
 # Maps model name to its respective engine file
 model_engine_paths = {
-    'clip': './clip/clip_engine.py',
+    # 'clip': './clip/clip_engine.py',
     'yolov5': './yolo/yolov5/yolov5_engine.py',
-    'yolov7': './yolo/yolov7/yolov7_engine.py'
+    # 'yolov7': './yolo/yolov7/yolov7_engine.py'
 }
+model_module_map = {
+    'yolov5': yolov5,
+}
+# To store process objects for the models
+model_procs = {}
+# To store the current query (query is unfortunately duplicated for each model)
+current_query_queue = multiprocessing.Queue()
+# To store model results
+model_response_queue = multiprocessing.Queue()
+
+
+# Loads all of the models
+def load_models():
+    for model_name in model_engine_paths:
+        # Create process
+        proc = multiprocessing.Process(
+            target=model_process_worker,
+            args=(model_name, current_query_queue, model_response_queue)
+        )
+        proc.start()
+        model_procs[model_name] = proc
+        return proc
+
+
+# Runs the model with the given name and returns a process object
+def model_process_worker(model_name, current_query_queue, model_response_queue):
+    # Load the model from memory
+    model_module_map[model_name].load_model()
+
+    while True:
+        req = current_query_queue.get(block=True) # Get query from queue
+        if req is None:
+            break
+        # Only deal with requests for this model
+        if model_name not in req['models']:
+            continue
+        # Process and add response to response queue
+        resp = model_module_map[model_name].process_query(req)
+        # Add name of model
+        resp = { model_name: resp }
+        model_response_queue.put(resp)
 
 
 def handle_queries():
@@ -34,63 +80,38 @@ def process_query(query_dict):
     compression_start = time.time()
     compressed_name = f'compressed_{os.path.basename(query_dict["video_path"])}'
     reconstruction_map = compress_video(
-            input_file=query_dict["video_path"],
-            output_file=compressed_name,
-            similarity_threshold=0.9
+        input_file=query_dict["video_path"],
+        output_file=compressed_name,
+        similarity_threshold=0.9
     )
     print(f'Finished compressing video. Time elapsed: {time.time() - compression_start}')
 
-    # Run models
-    procs = {}
-    for model_name in query_dict['models']:
-        proc = run_model(model_name, query_dict['query'], compressed_name)
-        procs[model_name] = proc
+    # Add query to query queue. We have to add a copy for each model (weird implementation, I know...)
+    # but it's simpler than using mutexes
+    for i in range(len(query_dict['models'])):
+        current_query_queue.put(query_dict)
+    print(f'MC: sending request #{query_dict["id"]}')
 
-    # Wait for subprocesses
-    for model_name in procs:
-        procs[model_name].wait()
-        # Check if model succeeded
-        return_code = procs[model_name].returncode
-        if return_code != 0:
-            print(f'Model {model_name} CRASHED with exit code: {return_code}')
-
+    current_query = None # Query has been sent to all models
+    # Create response
     response = { 'id': query_dict['id'] }
 
-    # Reconstruct intervals for original video
-    for model_name in query_dict['models']:
-        # Skip procs that failed
-        if procs[model_name].returncode != 0:
-            continue
-        if 'clip' in model_name:
-            model_type = 'clip'
-        elif 'yolo' in model_name:
-            model_type = 'yolo'
-        else:
-            raise NotImplementedError("Haven't implemented models other than yolo and clip")
-
-        output_file = f'{model_name}_results.json'
-        reconstruct_and_write_original_intervals(model_type, output_file, reconstruction_map)
-
-        with open(output_file, 'r') as f:
-            response[model_name] = json.load(f)
+    # Pull responses from response queue (num responses = num models requested in query)
+    for i in range(len(query_dict['models'])):
+        # Pull a response from the queue
+        resp = model_response_queue.get(block=True) # Block if necessary
+        response.update(resp) # Add
+        print(f'MC: got response for #{query_dict["id"]}: {resp}')
 
     print(f'Query: {query_dict["id"]} finished. Total time elapsed: {time.time() - start}')
 
     return response
 
 
-
-# Runs the model with the given name and returns a process object
-def run_model(model_name, query, source):
-    print(f'Starting {model_name}...')
-    output_file = f'{model_name}_results.json'
-    proc_name = model_engine_paths[model_name]
-    proc = subprocess.Popen(
-        ['python', proc_name, '--source', source, '--query', query, '--o', output_file])
-    return proc
-
-
 if __name__ == "__main__":
+
+    # ROUTINE
+    load_models()
     start_server()
     handle_queries()
 

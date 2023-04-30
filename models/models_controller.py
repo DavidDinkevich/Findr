@@ -1,13 +1,9 @@
 import multiprocessing
-import threading
-import os
 import signal
 
 from preprocessing import compress_video, reconstruct_and_write_original_intervals
-import subprocess
 import time
 import os
-import json
 from model_server import start_server, get_next_query, send_response
 import yolo.yolov5.yolov5_engine as yolov5
 
@@ -109,6 +105,14 @@ def process_query(query_dict):
 
 
 if __name__ == "__main__":
+    # MAKE SURE CHILD PROCS ARE TERMINATED ON EXIT
+    # Define a signal handler to terminate child processes
+    def sigterm_handler(signum, frame):
+        for process in multiprocessing.active_children():
+            process.terminate()
+        exit(0)
+    # Register the signal handler
+    signal.signal(signal.SIGTERM, sigterm_handler)
 
     # ROUTINE
     load_models()

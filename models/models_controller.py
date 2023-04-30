@@ -6,15 +6,12 @@ import time
 import os
 from model_server import start_server, get_next_query, send_response
 import yolo.yolov5.yolov5_engine as yolov5
+from clip_ import clip_engine
 
-# Maps model name to its respective engine file
-model_engine_paths = {
-    # 'clip': './clip/clip_engine.py',
-    'yolov5': './yolo/yolov5/yolov5_engine.py',
-    # 'yolov7': './yolo/yolov7/yolov7_engine.py'
-}
+
 model_module_map = {
     'yolov5': yolov5,
+    'clip': clip_engine,
 }
 # To store process objects for the models
 model_procs = {}
@@ -26,7 +23,7 @@ model_response_queue = multiprocessing.Queue()
 
 # Loads all of the models
 def load_models():
-    for model_name in model_engine_paths:
+    for model_name in model_module_map:
         # Create process
         proc = multiprocessing.Process(
             target=model_process_worker,
@@ -34,7 +31,6 @@ def load_models():
         )
         proc.start()
         model_procs[model_name] = proc
-        return proc
 
 
 # Runs the model with the given name and returns a process object

@@ -26,6 +26,20 @@ def load_model():
     model, preprocess = clip.load("ViT-B/32", device=device)
     print(f'Finished loading CLIP. Time Elapsed: {time.time() - start}')
 
+
+def process_query(query_dict):
+    query = query_dict['query']
+    video_path = query_dict['video_path']
+    # Get frames and compute the similarities for each
+    frame_similarities = compute_frame_similarities(video_path, query)
+    frame_similarities = np.array(frame_similarities).reshape(-1,1) # Reshape as column vec for later
+
+    # Compute accuracy classes
+    accuracy_classes = compute_accuracy_classes(frame_similarities)
+
+    return accuracy_classes
+
+
 def compute_similarity(query, frame):
     # Convert opencv frame to PIL image (what CLIP uses)
     pil_image = Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))

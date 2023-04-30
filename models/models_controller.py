@@ -1,7 +1,7 @@
 import multiprocessing
 import signal
 
-from preprocessing import compress_video, reconstruct_and_write_original_intervals
+from preprocessing import compress_video, remap_results_to_original_video
 import time
 import os
 from model_server import start_server, get_next_query, send_response
@@ -80,6 +80,8 @@ def process_query(query_dict):
         output_file=compressed_name,
         similarity_threshold=0.9
     )
+    # Replace video_path in query with compressed path instead
+    query_dict['video_path'] = compressed_name
     print(f'Finished compressing video. Time elapsed: {time.time() - compression_start}')
 
     # Add query to query queue. We have to add a copy for each model (weird implementation, I know...)
@@ -96,6 +98,10 @@ def process_query(query_dict):
     for i in range(len(query_dict['models'])):
         # Pull a response from the queue
         resp = model_response_queue.get(block=True) # Block if necessary
+        # Reconstruct intervals from response to original video
+        model_name = list(resp.keys())[0]
+        matches = resp[model_name]
+        resp[model_name] = remap_results_to_original_video(model_name, matches, reconstruction_map)
         response.update(resp) # Add
         print(f'MC: got response for #{query_dict["id"]}: {resp}')
 
@@ -115,7 +121,7 @@ if __name__ == "__main__":
     signal.signal(signal.SIGTERM, sigterm_handler)
 
     # ROUTINE
-    load_models()
     start_server()
+    load_models()
     handle_queries()
 

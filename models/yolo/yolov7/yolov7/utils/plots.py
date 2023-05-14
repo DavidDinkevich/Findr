@@ -349,7 +349,7 @@ def profile_idetection(start=0, stop=0, labels=(), save_dir=''):
     files = list(Path(save_dir).glob('frames*.txt'))
     for fi, f in enumerate(files):
         try:
-            results = np.loadtxt(f, ndmin=2).T[:, 90:-30]  # clip first and last rows
+            results = np.loadtxt(f, ndmin=2).T[:, 90:-30]  # clip_ first and last rows
             n = results.shape[1]  # number of rows
             x = np.arange(start, min(stop, n) if stop else n)
             results = results[:, x]

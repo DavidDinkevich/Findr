@@ -25,6 +25,7 @@ def start_server():
     sock.bind(server_address)
     # Listen for incoming connections
     sock.listen(10)
+    print(f'Model server is up at: {HOST}:{PORT}')
 
 
 def wait_for_connection():
@@ -65,7 +66,6 @@ def send_response(response):
     send_message(client_socket, response)
     client_socket.close()
     del client_socket_map[response_id]
-    print(f'Now client_socket_map is: {client_socket_map}')
 
 
 # UTILITY METHODS FOR SENDING ATOMIC MESSAGES

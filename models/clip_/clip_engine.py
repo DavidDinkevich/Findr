@@ -8,7 +8,6 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.cluster import DBSCAN
-import utils
 
 
 # GLOBALS
@@ -110,7 +109,7 @@ def compute_accuracy_classes(similarities, method='dbscan'):
         avg_acc_in_class = np.take(similarities, frame_indices_in_acc_class).mean()
         # Merge the intervals in the accuracy class
         intervals = [(n, n) for n in frame_indices_in_acc_class]
-        intervals = utils.merge_contiguous_tuples(intervals)
+        intervals = merge_contiguous_tuples(intervals)
 
         # print(f'{avg_acc_in_class}:  {str(intervals)}')
         accuracy_classes.append({
@@ -123,8 +122,18 @@ def compute_accuracy_classes(similarities, method='dbscan'):
 def merge_contiguous_intervals(accuracy_classes):
     new_acc_classes = []
     for frame_entry in accuracy_classes:
-        frame_entry['intervals'] = utils.merge_contiguous_tuples(frame_entry['intervals'])
+        frame_entry['intervals'] = merge_contiguous_tuples(frame_entry['intervals'])
     return new_acc_classes
+
+
+def merge_contiguous_tuples(arr):
+    merged_arr = []
+    for tup in arr:
+        if not merged_arr or tup[0] > merged_arr[-1][1] + 1:
+            merged_arr.append(tup)
+        else:
+            merged_arr[-1] = (merged_arr[-1][0], max(merged_arr[-1][1], tup[1]))
+    return merged_arr
 
 
 if __name__ == '__main__':

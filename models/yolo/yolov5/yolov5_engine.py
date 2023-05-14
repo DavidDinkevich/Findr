@@ -27,8 +27,13 @@ def process_query(query_dict):
 
     # Write matched frames structure to file in JSON
     matched_frames = run_yolo_on_video(video_path)
-    print(f'yolov5: sending response: {matched_frames}\n')
-    return matched_frames
+
+    # Keep matches that relate to query, and overall frame accuracy for each frame
+    filtered_compressed_matches = filter_with_query(query, matched_frames)
+    add_average_accuracy_to_matches(filtered_compressed_matches)
+
+    print(f'yolov5: sending response: {filtered_compressed_matches}\n')
+    return filtered_compressed_matches
 
 
 def run_yolo_on_video(input_path):

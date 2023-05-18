@@ -1,5 +1,5 @@
 import uvicorn
-import os
+
 
 from routers.Firebase import app
 

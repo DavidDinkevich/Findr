@@ -4,10 +4,11 @@ import ReactPlayer from 'react-player';
 import './main-window.css';
 import axios from 'axios';
 import Logo from '../only_logo.png';
+import { useNavigate } from 'react-router-dom';
 
 function VideoUploader() {
   const [videoFile, setVideoFile] = useState(null);
-
+  const navigate = useNavigate();
 
   const handleDrop = async (acceptedFiles) => {
     const file = acceptedFiles[0];
@@ -26,8 +27,14 @@ function VideoUploader() {
             'Content-Type': 'multipart/form-data'
           }
         });
-  
-        console.log('File uploaded successfully:', response.data);
+        const jumpPoints = [10, 20, 30];
+        
+        if (response.status === 200){
+          console.log('File uploaded successfully');
+          navigate('/videoPlayer/', { state: { videoFile: file, jumpPoints } });
+        }
+
+
       } catch (error) {
         console.error('Error uploading file:', error);
       }
@@ -35,24 +42,6 @@ function VideoUploader() {
       console.log('Please upload a video file.');
     }
   };
-  // const handleDrop = async (acceptedFiles) => {
-  //   const file = acceptedFiles[0];
-  //   const user = 'user'
-  //   if (file.type.startsWith('video/')) {
-  //     setVideoFile(file);
-  //     const formData = new FormData();
-  //     formData.append('video', file);
-  //     formData.append('username', user);
-  //     const response = await axios.post('http://localhost:5002/upload_video', formData, {
-  //       headers: {
-  //         'Content-Type': 'multipart/form-data'
-  //       }
-  //     });
-  //     console.log(response.status)
-  //   } else {
-  //     console.log('Please upload a video file.');
-  //   }
-  // };
 
   const button_uploadNewVideo = () => {
     const input = document.createElement('input');
@@ -86,7 +75,6 @@ function VideoUploader() {
       }
 
       <input id='query_bar' type="text" className="form-control" placeholder="Enter your query here" />
-
     </div>
   );
 }

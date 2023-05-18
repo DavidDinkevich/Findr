@@ -1,0 +1,50 @@
+.video-container {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+    background-color: black;
+  }
+  
+  .video-container video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .numbers-list {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 10px;
+  }
+  
+  .numbers-list button {
+    margin: 5px;
+    padding: 10px;
+    background-color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .numbers-list button:hover {
+    background-color: #ddd;
+  }
+  
+  .jump-button {
+    display: block;
+    margin: 10px auto;
+    padding: 10px;
+    background-color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .jump-button:hover {
+    background-color: #ddd;
+  }
+  

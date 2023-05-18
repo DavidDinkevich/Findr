@@ -743,10 +743,10 @@ def load_mosaic(self, index):
         labels4.append(labels)
         segments4.extend(segments)
 
-    # Concat/clip labels
+    # Concat/clip_ labels
     labels4 = np.concatenate(labels4, 0)
     for x in (labels4[:, 1:], *segments4):
-        np.clip(x, 0, 2 * s, out=x)  # clip when using random_perspective()
+        np.clip(x, 0, 2 * s, out=x)  # clip_ when using random_perspective()
     # img4, labels4 = replicate(img4, labels4)  # replicate
 
     # Augment
@@ -815,7 +815,7 @@ def load_mosaic9(self, index):
     yc, xc = [int(random.uniform(0, s)) for _ in self.mosaic_border]  # mosaic center x, y
     img9 = img9[yc:yc + 2 * s, xc:xc + 2 * s]
 
-    # Concat/clip labels
+    # Concat/clip_ labels
     labels9 = np.concatenate(labels9, 0)
     labels9[:, [1, 3]] -= xc
     labels9[:, [2, 4]] -= yc
@@ -823,7 +823,7 @@ def load_mosaic9(self, index):
     segments9 = [x - c for x in segments9]
 
     for x in (labels9[:, 1:], *segments9):
-        np.clip(x, 0, 2 * s, out=x)  # clip when using random_perspective()
+        np.clip(x, 0, 2 * s, out=x)  # clip_ when using random_perspective()
     # img9, labels9 = replicate(img9, labels9)  # replicate
 
     # Augment
@@ -878,10 +878,10 @@ def load_samples(self, index):
         labels4.append(labels)
         segments4.extend(segments)
 
-    # Concat/clip labels
+    # Concat/clip_ labels
     labels4 = np.concatenate(labels4, 0)
     for x in (labels4[:, 1:], *segments4):
-        np.clip(x, 0, 2 * s, out=x)  # clip when using random_perspective()
+        np.clip(x, 0, 2 * s, out=x)  # clip_ when using random_perspective()
     # img4, labels4 = replicate(img4, labels4)  # replicate
 
     # Augment
@@ -1077,7 +1077,7 @@ def random_perspective(img, targets=(), segments=(), degrees=10, translate=.1, s
                 xy = xy @ M.T  # transform
                 xy = xy[:, :2] / xy[:, 2:3] if perspective else xy[:, :2]  # perspective rescale or affine
 
-                # clip
+                # clip_
                 new[i] = segment2box(xy, width, height)
 
         else:  # warp boxes
@@ -1091,7 +1091,7 @@ def random_perspective(img, targets=(), segments=(), degrees=10, translate=.1, s
             y = xy[:, [1, 3, 5, 7]]
             new = np.concatenate((x.min(1), y.min(1), x.max(1), y.max(1))).reshape(4, n).T
 
-            # clip
+            # clip_
             new[:, [0, 2]] = new[:, [0, 2]].clip(0, width)
             new[:, [1, 3]] = new[:, [1, 3]].clip(0, height)
 
@@ -1285,7 +1285,7 @@ def extract_boxes(path='../coco/'):  # from utils.datasets import *; extract_box
                     b[2:] = b[2:] * 1.2 + 3  # pad
                     b = xywh2xyxy(b.reshape(-1, 4)).ravel().astype(np.int)
 
-                    b[[0, 2]] = np.clip(b[[0, 2]], 0, w)  # clip boxes outside of image
+                    b[[0, 2]] = np.clip(b[[0, 2]], 0, w)  # clip_ boxes outside of image
                     b[[1, 3]] = np.clip(b[[1, 3]], 0, h)
                     assert cv2.imwrite(str(f), im[b[1]:b[3], b[0]:b[2]]), f'box failure in {f}'
 

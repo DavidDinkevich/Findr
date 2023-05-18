@@ -51,22 +51,13 @@ def remap_results_to_original_video(model, compressed_results, reconstruction_ma
             for interval in frame['intervals']:
                 interval[0] = reconstruction_map[interval[0]][0]
                 interval[1] = reconstruction_map[interval[1]][1]
-    elif model == 'yolo':
+    elif 'yolo' in model:
         for frame in compressed_results:
             # Replace "frame_index" with "interval"
             frame['interval'] = reconstruction_map[frame['frame_index']]
             del frame['frame_index']
 
     return compressed_results
-
-
-def reconstruct_and_write_original_intervals(model, intervals_file, reconstruction_map):
-    with open(intervals_file, 'r+') as f:
-        intervals = json.load(f)
-        reconstructed_intervals = remap_results_to_original_video(model, intervals, reconstruction_map)
-        f.seek(0)
-        f.truncate()
-        json.dump(reconstructed_intervals, f)
 
 
 def get_sig_frames_parallel(video_path, num_workers, similarity_threshold, skip_rate):

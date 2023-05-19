@@ -1,0 +1,5 @@
+CLIP:
+[{"accuracy": 31.4453125, "intervals": [[0, 14], [90, 103]]}, {"accuracy": 20.96875, "intervals": [[15, 89]]}]
+
+YOLO:
+[{"matches": [{"label": "giraffe", "accuracy": 0.94}, {"label": "horse", "accuracy": 0.81}], "accuracy": 0.94, "interval": [0, 14]}, {"matches": [{"label": "giraffe", "accuracy": 0.94}], "accuracy": 0.94, "interval": [90, 103]}]

@@ -117,7 +117,7 @@ async def create_upload_file(file: UploadFile = File(...)):
     filename = file.filename
     async with aiofiles.open(filename, 'wb') as f:
         await f.write(contents)
-
+    await asyncio.sleep(3)
 
     # Return response with saved file
     file_path = os.path.abspath(filename)

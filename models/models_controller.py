@@ -8,11 +8,13 @@ from model_server import start_server, get_next_query, send_response
 import yolo.yolov5.yolov5_engine as yolov5
 from clip_ import clip_engine
 from efficientnet import efficientnet_engine
+from resnet import resnet_engine
 
 model_module_map = {
     'yolov5': yolov5,
     'clip': clip_engine,
-    'efficientnet': efficientnet_engine
+    'efficientnet': efficientnet_engine,
+    'resnet': resnet_engine
 }
 # To store process objects for the models
 model_procs = {}
@@ -65,11 +67,11 @@ def handle_queries():
 
 # Process a single query
 def process_query(query_dict):
-    print(f'Beginning to process query id={query_dict["id"]}')
+    print(f'[MODEL CONTROLLER]: Beginning to process query id={query_dict["id"]}')
     start = time.time()
 
     # Compress the video
-    print('Compressing video...')
+    print('[MODEL CONTROLLER]: Compressing video...')
     compression_start = time.time()
     compressed_name = f'compressed_{os.path.basename(query_dict["video_path"])}'
     reconstruction_map = compress_video(
@@ -79,15 +81,14 @@ def process_query(query_dict):
     )
     # Replace video_path in query with compressed path instead
     query_dict['video_path'] = compressed_name
-    print(f'Finished compressing video. Time elapsed: {time.time() - compression_start}')
+    print(f'[MODEL CONTROLLER]: Finished compressing video. Time elapsed: {time.time() - compression_start}')
 
     # Add query to query queue. We have to add a copy for each model (weird implementation, I know...)
     # but it's simpler than using mutexes
     for i in range(len(query_dict['models'])):
         current_query_queue.put(query_dict)
-    print(f'MC: sending request #{query_dict["id"]}')
+    print(f'[MODEL CONTROLLER]: sending request #{query_dict["id"]}')
 
-    current_query = None # Query has been sent to all models
     # Create response
     response = { 'id': query_dict['id'] }
 
@@ -100,9 +101,9 @@ def process_query(query_dict):
         matches = resp[model_name]
         resp[model_name] = remap_results_to_original_video(model_name, matches, reconstruction_map)
         response.update(resp) # Add
-        print(f'MC: got response for #{query_dict["id"]}: {resp}')
+        print(f'[MODEL CONTROLLER]: got response for #{query_dict["id"]}: {resp}')
 
-    print(f'Query: {query_dict["id"]} finished. Total time elapsed: {time.time() - start}')
+    print(f'[MODEL CONTROLLER]: Query: {query_dict["id"]} finished. Response: {response}\nTotal time elapsed: {time.time() - start}')
 
     return response
 

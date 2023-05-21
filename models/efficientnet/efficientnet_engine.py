@@ -21,7 +21,6 @@ def load_model():
     device = 'cpu'
     # Load the pretrained EfficientNet model
     model = efficientnet.efficientnet_b0(pretrained=True).to(device)
-    # model = resnet.resnet50(pretrained=True)
     model.eval()
     print(f'[EFFICIENTNET]: finished loading. Time elapsed: {time.time() - t1}')
 
@@ -30,12 +29,12 @@ def process_query(query_dict):
     # Unpack query
     query = query_dict['query']
     video_path = query_dict['video_path']
-    print(f'yolov5: got query: {query_dict}')
+    print(f'[EFFICIENTNET]: got query: {query_dict}')
 
     # Write matched frames structure to file in JSON
     matched_frames = run_efficientnet_on_video(query, video_path)
 
-    print(f'efficientnet: sending response: {matched_frames}\n')
+    print(f'[EFFICIENTNET]: sending response: {matched_frames}\n')
     return matched_frames
 
 
@@ -87,9 +86,3 @@ def run_efficientnet_on_video(query, input_path):
 
 def is_significant_match(query, predicted_class):
     return predicted_class in query or query in predicted_class
-
-# load_model()
-# start = time.time()
-# matched_frames = process_query({'query': 'hippo', 'video_path': 'C:\\Users\\david\\Documents\\github repos\\Findr\\models\\compressed_giraffe_and_hippo.mp4'})
-# print(f'Matched frames are: {matched_frames}')
-# print(f'time was: {time.time() - start}')

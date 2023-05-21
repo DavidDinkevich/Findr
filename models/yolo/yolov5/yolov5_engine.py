@@ -2,28 +2,27 @@ import time
 import numpy as np
 import torch
 import cv2
-import sys
 
 device = None
 model = None
 
 
 def load_model():
-    print('Loading yolov5...')
+    print('[YOLOV5]: Loading yolov5...')
     t1 = time.time()
     global device, model
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
-    print(f'Using device: {device}')
+    # print(f'Using device: {device}')
     model = torch.hub.load('ultralytics/yolov5', 'yolov5s', pretrained=True).to(device)
     model.eval()
-    print(f'YOLO: finished loading. Time elapsed: {time.time() - t1}')
+    print(f'[YOLOV5]: finished loading. Time elapsed: {time.time() - t1}')
 
 
 def process_query(query_dict):
     # Unpack query
     query = query_dict['query']
     video_path = query_dict['video_path']
-    print(f'yolov5: got query: {query_dict}')
+    print(f'[YOLOV5]: got query: {query_dict}')
 
     # Write matched frames structure to file in JSON
     matched_frames = run_yolo_on_video(video_path)
@@ -32,7 +31,7 @@ def process_query(query_dict):
     filtered_compressed_matches = filter_with_query(query, matched_frames)
     add_average_accuracy_to_matches(filtered_compressed_matches)
 
-    print(f'yolov5: sending response: {filtered_compressed_matches}\n')
+    print(f'[YOLOV5]: sending response: {filtered_compressed_matches}\n')
     return filtered_compressed_matches
 
 

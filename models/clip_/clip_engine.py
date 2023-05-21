@@ -21,9 +21,9 @@ def load_model():
     global model, device, preprocess
     start = time.time()
     device = "cuda" if torch.cuda.is_available() else "cpu"
-    print('Using device: ', device)
+    # print('Using device: ', device)
     model, preprocess = clip.load("ViT-B/32", device=device)
-    print(f'Finished loading CLIP. Time Elapsed: {time.time() - start}')
+    print(f'[CLIP]: Finished loading CLIP. Time Elapsed: {time.time() - start}')
 
 
 def process_query(query_dict):
@@ -118,7 +118,6 @@ def compute_accuracy_classes(similarities, method='dbscan'):
         })
     return accuracy_classes
 
-# TODO TEST OPTIMIZATION
 def merge_contiguous_intervals(accuracy_classes):
     new_acc_classes = []
     for frame_entry in accuracy_classes:
@@ -186,5 +185,5 @@ if __name__ == '__main__':
         # Show the plot
         plt.show()
 
-    print(f'CLIP terminated. Time elapsed: {time.time() - clip_start}')
+    print(f'[CLIP]: CLIP terminated. Time elapsed: {time.time() - clip_start}')
 

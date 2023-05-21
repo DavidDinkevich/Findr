@@ -7,11 +7,12 @@ import os
 from model_server import start_server, get_next_query, send_response
 import yolo.yolov5.yolov5_engine as yolov5
 from clip_ import clip_engine
-
+from efficientnet import efficientnet_engine
 
 model_module_map = {
     'yolov5': yolov5,
     'clip': clip_engine,
+    'efficientnet': efficientnet_engine
 }
 # To store process objects for the models
 model_procs = {}

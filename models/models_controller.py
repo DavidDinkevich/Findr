@@ -9,12 +9,14 @@ import yolo.yolov5.yolov5_engine as yolov5
 from clip_ import clip_engine
 from efficientnet import efficientnet_engine
 from resnet import resnet_engine
+from inceptionv3 import inceptionv3_engine
 
 model_module_map = {
     'yolov5': yolov5,
     'clip': clip_engine,
     'efficientnet': efficientnet_engine,
-    'resnet': resnet_engine
+    'resnet': resnet_engine,
+    'inceptionv3': inceptionv3_engine
 }
 # To store process objects for the models
 model_procs = {}
@@ -47,6 +49,8 @@ def model_process_worker(model_name, current_query_queue, model_response_queue):
             break
         # Only deal with requests for this model
         if model_name not in req['models']:
+            # Add element back
+            current_query_queue.put(req)
             continue
         # Process and add response to response queue
         resp = model_module_map[model_name].process_query(req)
@@ -86,8 +90,11 @@ def process_query(query_dict):
     # Add query to query queue. We have to add a copy for each model (weird implementation, I know...)
     # but it's simpler than using mutexes
     for i in range(len(query_dict['models'])):
-        current_query_queue.put(query_dict)
-    print(f'[MODEL CONTROLLER]: sending request #{query_dict["id"]}')
+        specific_query = query_dict.copy()
+        specific_query['models'] = [query_dict['models'][i]]
+        current_query_queue.put(specific_query)
+        print(f'[MODEL CONTROLLER]: added query: {specific_query}')
+    print(f'[MODEL CONTROLLER]: sending request {query_dict["id"]}')
 
     # Create response
     response = { 'id': query_dict['id'] }

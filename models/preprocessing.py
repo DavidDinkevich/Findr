@@ -3,7 +3,6 @@ import numpy as np
 import threading
 import time
 import multiprocessing
-import json
 
 
 def compress_video(input_file, output_file, similarity_threshold=0.9):
@@ -51,7 +50,7 @@ def remap_results_to_original_video(model, compressed_results, reconstruction_ma
             for interval in frame['intervals']:
                 interval[0] = reconstruction_map[interval[0]][0]
                 interval[1] = reconstruction_map[interval[1]][1]
-    elif model in ['yolov5', 'yolov7', 'efficientnet', 'resnet']:
+    else:
         for frame in compressed_results:
             # Replace "frame_index" with "interval"
             frame['interval'] = reconstruction_map[frame['frame_index']]

@@ -51,7 +51,7 @@ def remap_results_to_original_video(model, compressed_results, reconstruction_ma
             for interval in frame['intervals']:
                 interval[0] = reconstruction_map[interval[0]][0]
                 interval[1] = reconstruction_map[interval[1]][1]
-    elif 'yolo' in model:
+    elif model in ['yolov5', 'yolov7', 'efficientnet', 'resnet']:
         for frame in compressed_results:
             # Replace "frame_index" with "interval"
             frame['interval'] = reconstruction_map[frame['frame_index']]

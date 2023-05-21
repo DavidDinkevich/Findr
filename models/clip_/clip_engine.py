@@ -27,6 +27,7 @@ def load_model():
 
 
 def process_query(query_dict):
+    print(f'[CLIP]: got query: {query_dict}')
     query = query_dict['query']
     video_path = query_dict['video_path']
     # Get frames and compute the similarities for each
@@ -35,7 +36,7 @@ def process_query(query_dict):
 
     # Compute accuracy classes
     accuracy_classes = compute_accuracy_classes(frame_similarities)
-
+    print(f'[CLIP]: sending response: {accuracy_classes}')
     return accuracy_classes
 
 
@@ -108,7 +109,7 @@ def compute_accuracy_classes(similarities, method='dbscan'):
         # Compute the mean class accuracy
         avg_acc_in_class = np.take(similarities, frame_indices_in_acc_class).mean()
         # Merge the intervals in the accuracy class
-        intervals = [(n, n) for n in frame_indices_in_acc_class]
+        intervals = [[n, n] for n in frame_indices_in_acc_class]
         intervals = merge_contiguous_tuples(intervals)
 
         # print(f'{avg_acc_in_class}:  {str(intervals)}')
@@ -131,7 +132,7 @@ def merge_contiguous_tuples(arr):
         if not merged_arr or tup[0] > merged_arr[-1][1] + 1:
             merged_arr.append(tup)
         else:
-            merged_arr[-1] = (merged_arr[-1][0], max(merged_arr[-1][1], tup[1]))
+            merged_arr[-1] = [merged_arr[-1][0], max(merged_arr[-1][1], tup[1])]
     return merged_arr
 
 

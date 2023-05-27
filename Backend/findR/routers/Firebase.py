@@ -5,6 +5,7 @@ from fastapi import FastAPI, HTTPException,File, UploadFile
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 import asyncio
+import routers.model_requests as ML_R
 
 import aiofiles
 import os
@@ -109,19 +110,18 @@ def check_login(username: str, password: str):
                 return {'message': 'Login successful'}
     raise HTTPException(status_code=401, detail='Invalid credentials')
 
-@app.post("/uploadfile/")
-async def create_upload_file(file: UploadFile = File(...)):
+@app.post("/uploadfile/{query}")
+async def create_upload_file(query:str,file: UploadFile = File(...)):
     contents = await file.read()  # binary read
-
     # Save file to disk
     filename = file.filename
     async with aiofiles.open(filename, 'wb') as f:
         await f.write(contents)
-    await asyncio.sleep(3)
-
-    # Return response with saved file
-    file_path = os.path.abspath(filename)
-    return FileResponse(file_path, media_type="video/mp4", filename=filename)
+    response = ML_R.send_request(query,os.path.abspath(filename),['yolov5', 'clip','efficientnet','resnet','inceptionv3'])
+    return response
+    #Return response with saved file
+    # file_path = os.path.abspath(filename)
+    # return FileResponse(file_path, media_type="video/mp4", filename=filename)
 
 
 @app.post("/clear")

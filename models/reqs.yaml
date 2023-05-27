@@ -1,4 +1,4 @@
-name: gpu_env2
+name: new_env
 channels:
   - pytorch
   - anaconda
@@ -118,7 +118,6 @@ dependencies:
   - mkl_random=1.2.2=py310h4ed8f06_0
   - mpmath=1.2.1=py310haa95532_0
   - munkres=1.1.4=py_0
-  - nb_conda_kernels=2.3.1=py310haa95532_0
   - nbclassic=0.5.4=py310haa95532_0
   - nbclient=0.5.13=py310haa95532_0
   - nbconvert=6.5.4=py310haa95532_0
@@ -239,4 +238,4 @@ dependencies:
       - traitlets==5.9.0
       - wcwidth==0.2.6
       - werkzeug==2.2.3
-prefix: C:\Users\david\anaconda3\envs\gpu_env2
+prefix: C:\Users\miche\anaconda3\envs\new_env

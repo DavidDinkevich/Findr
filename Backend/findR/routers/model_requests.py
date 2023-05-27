@@ -70,9 +70,9 @@ def recv_message(sock):
     return msg.decode()
 
 
-if __name__ == '__main__':
-    query = 'giraffe'
-    # Change this to an ABSOLUTE PATH on your computer (we don't support relative yet)
-    path = 'C:/Users/david/Documents/github repos/Findr/models/resources/giraffe_and_hippo.mp4'
-    models  = ['yolov5', 'clip']
-    send_request(query, path, models)
+# if __name__ == '__main__':
+#     query = 'giraffe'
+#     # Change this to an ABSOLUTE PATH on your computer (we don't support relative yet)
+#     path = 'C:/Users/miche/Downloads/girrafe.mp4'
+#     models  = ['yolov5', 'clip']
+#     response = send_request(query, path, models)

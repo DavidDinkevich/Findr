@@ -33,13 +33,13 @@ function VideoUploader() {
     formData.append('file', videoFile);
     try {
       console.log(query);
-      const response = await axios.post('http://localhost:5002/uploadfile/', formData, {
+      const response = await axios.post(`http://localhost:5002/uploadfile/${query}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       });
       const jumpPoints = [10, 20, 30];
-  
+      console.log(response.data)
       if (response.status === 200) {
         console.log('File uploaded successfully');
         navigate('/videoPlayer/', { state: { videoFile: videoFile, jumpPoints } });

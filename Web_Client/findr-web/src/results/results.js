@@ -7,6 +7,7 @@ function VideoPlayer(props) {
     const videoRef = useRef(null);
     const [playing, setPlaying] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
+    const [currentIndex, setCurrentIndex] = useState(-1);
   
     useEffect(() => {
       if (videoRef.current) {
@@ -14,9 +15,19 @@ function VideoPlayer(props) {
       }
     }, [currentTime]);
   
-    const handleJumpButtonClick = (time) => {
-      setCurrentTime(time);
-      setPlaying(true);
+    // const handleJumpButtonClick = (time) => {
+    //   setCurrentTime(time);
+    //   setPlaying(true);
+    // };
+
+    const handleJumpButtonClick = () => {
+      if (currentIndex < props.numberList.length) {
+        const nextIndex = currentIndex + 1;
+        const nextNumber = props.numberList[nextIndex];
+        setCurrentIndex(nextIndex);
+        setCurrentTime(nextNumber);
+        setPlaying(false);
+      }
     };
   
   
@@ -29,7 +40,7 @@ function VideoPlayer(props) {
           <div className="logo_header">
             <img src={Logo} alt="Logo" className="logo" />
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '420px', marginTop: '20px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '500px', marginTop: '20px' }}>
             <div style={{ display: 'grid', placeItems: 'center', width: '80%', aspectRatio: '16/9', backgroundColor: 'black' }}>
               <ReactPlayer
                 ref={videoRef}
@@ -43,12 +54,10 @@ function VideoPlayer(props) {
               />
             </div>
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '10px' }}>
-              {props.numberList.map((number, index) => (
-                <button key={index} onClick={() => handleJumpButtonClick(number)}>
-                  Jump to {number}
-                </button>
-              ))}
-            </div>
+        <button onClick={handleJumpButtonClick}>
+          Jump to Next Number
+        </button>
+      </div>
           </div>
         </div>
       );

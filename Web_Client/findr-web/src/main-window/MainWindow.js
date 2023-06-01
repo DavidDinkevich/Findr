@@ -139,66 +139,66 @@ function VideoUploader() {
             <tbody>
               <tr>
                 <td>
-                  <label>
+                  <label title="CLIP (Contrastive Language-Image Pretraining) is an AI model that learns to understand images and their corresponding textual descriptions. It is trained on a large dataset of image-text pairs to associate visual and textual representations. This allows CLIP to perform various tasks such as image classification, object detection, and generating textual descriptions for images.">
                     <input
                       type="checkbox"
                       name="clip"
                       checked={checkboxValues.clip}
                       onChange={handleCheckboxChange}
                     />
-                    clip
+                    CLIP
                   </label>
                 </td>
                 </tr>
                 <tr>
                 <td>
-                <label>
+                <label title="ResNet (Residual Neural Network) is an AI model architecture that revolutionized image classification tasks. It introduces the concept of residual connections, allowing the model to effectively train very deep neural networks. ResNet's key innovation is the use of skip connections that bypass certain layers, enabling the network to learn residual functions. This helps to address the problem of vanishing gradients and enables successful training of deep networks. With its deep architecture, ResNet can learn intricate features and representations, leading to improved accuracy in image classification tasks.">
                     <input
                       type="checkbox"
                       name="resnet"
                       checked={checkboxValues.resnet}
                       onChange={handleCheckboxChange}
                     />
-                    resnet
+                    ResNet
                   </label>
                 </td>
               </tr>
                 <tr>
                 <td>
-                <label>
+                <label title="InceptionV3 is an AI model architecture that excels in image recognition and classification tasks. It utilizes a deep convolutional neural network with multiple layers, including inception modules. Inception modules employ various filter sizes to capture different scales of features in parallel, enabling the model to capture both local and global information. InceptionV3 reduces the number of parameters and computational complexity by using 1x1 convolutions to perform dimensionality reduction. This architecture allows InceptionV3 to achieve high accuracy in image classification tasks while maintaining efficiency.">
                     <input
                       type="checkbox"
                       name="inceptionv3"
                       checked={checkboxValues.inceptionv3}
                       onChange={handleCheckboxChange}
                     />
-                    inceptionv3
+                    Inceptionv3
                   </label>
                 </td>
               </tr>
               <tr>
                 <td>
-                <label>
+                <label title="YOLOv5 (You Only Look Once) is an AI model architecture specifically designed for real-time object detection. It utilizes a single neural network to simultaneously predict bounding boxes and class probabilities for objects within an image. YOLOv5 achieves this by dividing the image into a grid and associating each grid cell with multiple anchor boxes. The model then predicts the bounding box coordinates and class probabilities for each anchor box. YOLOv5 employs a backbone network (such as CSPDarknet53 or EfficientNet) for feature extraction and applies additional convolutional layers for detection. YOLOv5 is known for its speed and accuracy, making it well-suited for applications that require real-time object detection.">
                     <input
                       type="checkbox"
                       name="yolov5"
                       checked={checkboxValues.yolov5}
                       onChange={handleCheckboxChange}
                     />
-                    yolov5
+                    YOLOv5
                   </label>
                 </td>
               </tr>
               <tr>
                 <td>
-                <label>
+                <label title="EfficientNet is an AI model architecture that achieves high accuracy while maintaining efficiency by using a compound scaling method. It scales the depth, width, and resolution of the model in a balanced manner to optimize performance. EfficientNet employs a mobile inverted bottleneck convolutional (MBConv) block, which consists of depth-wise convolutions, point-wise convolutions, and skip connections. This block reduces computational complexity while capturing complex patterns and features. EfficientNet achieves state-of-the-art performance on various image classification tasks with fewer parameters and computations compared to other models.">
                     <input
                       type="checkbox"
                       name="efficientnet"
                       checked={checkboxValues.efficientnet}
                       onChange={handleCheckboxChange}
                     />
-                    efficientnet
+                    EfficientNet
                   </label>
                 </td>
               </tr>

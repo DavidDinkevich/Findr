@@ -1,91 +1,81 @@
-.dropzone {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  border: 2px dashed #ccc;
-  height: 80%;
-  padding: 20px;
-  cursor: pointer;
-}
-  
-.dropzone p {
-  margin: 0;
-}
-  
-.video-player {
-  margin-top: 20px;
-  max-width: 80%;
-  height: auto;
-}
-
 #main_div {
-  margin: 6% 20% 10% 20%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 6% 15% 10% 15%;
 }
 
 .logo_header {
-  position: relative;
-  height: 130px; 
+  height: 130px;
   margin-bottom: 10px;
 }
 
 .logo {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 250px; /* Adjust to desired size */
-  height: auto; /* Adjust to desired size */
-} 
-
-#query_bar {
-  margin-top: 50px;
-  margin-right: auto;
-  margin-left: auto;
-  justify-content: center;
-  display: flex;
-  width: 80%
+  width: 250px;
+  height: auto;
 }
-
-#logo {
+.container-div {
   display: flex;
-  margin: auto;
-  text-align: center;
-  font-size: 60px;
-  font-weight: 600;
-  margin-bottom: 50px;
-}
-
-
-#video-drop-zone {
-  border: '1px solid black';
-  height: 200px;
+  justify-content: space-between;
   width: 80%;
-  margin: auto;
+  outline: 2px solid rgb(255, 0, 0);
 }
 
-.main-window-button {
-  margin: 30px auto auto auto;
-  text-align: center;
+.content-wrapper { 
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 80%;
+  outline: 2px solid rgb(0, 255, 102);
+}
+
+.video-section {
+  flex-basis: 60%;
+}
+
+.video-drop-zone {
+  border: dashed 2px gray;
+  border-radius: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100%;
+  height: 300px;
+}
+
+.video-drop-zone p{
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+}
+
+.query-section {
+  flex-basis: 60%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
   
+}
+
+.checkbox-section {
+  flex-basis: 30%;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 40px; /* Added */
+  margin-left:10px;
+  outline: 2px solid blue;
+}
+
+.checkbox-section label {
+  display: block;
+  white-space: nowrap;
+  margin-bottom: 5px;
 }
 
 .get-results-button {
-  margin: 30px auto auto auto;
-  text-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  
-}
-
-.btn-custom {
-  background-color: #007bff; /* Set your desired color */
-  color: #ffffff; /* Set the text color */
-  /* Add any other desired styles */
+  margin-top: 10px;
+  width: 100%;
+  max-width: 150px;
 }
 
 .popup {
@@ -98,5 +88,35 @@
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   z-index: 9999;
+}
+
+/* Additional styles */
+
+
+
+.video-player {
+  margin-top: 20px;
+  max-width: 100%;
+  height: auto;
+}
+
+.video-player-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+.main-window-button {
+  margin-top: 10px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn-custom {
+  background-color: #007bff;
+  color: #ffffff;
 }
 

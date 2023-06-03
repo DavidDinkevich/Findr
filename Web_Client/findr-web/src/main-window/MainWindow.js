@@ -5,12 +5,12 @@ import './main-window.css';
 import axios from 'axios';
 import Logo from '../only_logo.png';
 import { useNavigate } from 'react-router-dom';
-import Modal from 'react-modal';
 
 function VideoUploader() {
   const [videoFile, setVideoFile] = useState(null);
   const navigate = useNavigate();
   const [query, setQuery] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   const [checkboxValues, setCheckboxValues] = useState({
     clip: false,
     resnet: false,
@@ -28,6 +28,11 @@ function VideoUploader() {
     const trueValues = Object.entries(checkboxValues)
       .filter(([key, value]) => value === true)
       .map(([key, value]) => key);
+  
+    // Add 'clip' if the list is empty
+    if (trueValues.length === 0) {
+      trueValues.push('clip');
+    }
     
     return trueValues.join(", ");
   }
@@ -46,11 +51,17 @@ function VideoUploader() {
   };
 
   const getResults = async () => {
-    if (query.trim() === '') {
-      // Show a popup or error message to prompt the user to enter a query
+    if (!videoFile) {
+      setErrorMessage('Please upload a video.');
       setShowModal(true);
       return;
     }
+    if (query.trim() === '') {
+      setErrorMessage('Please enter a query.');
+      setShowModal(true);
+      return;
+    }
+    
     // Create a FormData object to send the file as a binary payload
     const formData = new FormData();
     formData.append('file', videoFile);
@@ -61,11 +72,12 @@ function VideoUploader() {
           'Content-Type': 'multipart/form-data'
         }
       });
-      const jumpPoints = [10, 20, 30];
+      const jumpPoints = [2, 4, 6];
+      const model = 'clip'
       console.log(response.data);
       if (response.status === 200) {
         console.log('File uploaded successfully');
-        navigate('/videoPlayer/', { state: { videoFile: videoFile, jumpPoints } });
+        navigate('/videoPlayer/', { state: { videoFile: videoFile, jumpPoints, model} });
       }
     } catch (error) {
       console.error('Error uploading file:', error);
@@ -210,7 +222,7 @@ function VideoUploader() {
       {showModal && (
         <div className="popup">
           <h2>Error</h2>
-          <p>Please enter a query.</p>
+          <p>{errorMessage}</p>
           <button type="button" onClick={handleCloseModal}>Close</button>
         </div>
       )}

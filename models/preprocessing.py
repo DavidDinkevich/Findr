@@ -59,6 +59,11 @@ def remap_results_to_original_video(model, compressed_results, reconstruction_ma
     return compressed_results
 
 
+def get_num_frames(video_path):
+    cap = cv2.VideoCapture(video_path)
+    return int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+
+
 def get_sig_frames_parallel(video_path, num_workers, similarity_threshold, skip_rate):
     cap = cv2.VideoCapture(video_path)
     total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))

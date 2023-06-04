@@ -1,6 +1,7 @@
 import multiprocessing
 import signal
 
+import preprocessing
 from preprocessing import compress_video, remap_results_to_original_video
 import time
 import os
@@ -61,8 +62,10 @@ def model_process_worker(model_name, current_query_queue, model_response_queue):
 
 def handle_queries():
     while True:
+        print('[MODEL CONTROLLER]: waiting for next query...')
         # Get next query
         query = get_next_query()
+        print(f'[MODEL CONTROLLER]: reading next query: {query}')
         # Process
         resp = process_query(query)
         # Send back response
@@ -110,6 +113,8 @@ def process_query(query_dict):
         response.update(resp) # Add
         print(f'[MODEL CONTROLLER]: got response for #{query_dict["id"]}: {resp}')
 
+    # Add num frames
+    response['num_frames'] = preprocessing.get_num_frames(query_dict['video_path'])
     print(f'[MODEL CONTROLLER]: Query: {query_dict["id"]} finished. Response: {response}\nTotal time elapsed: {time.time() - start}')
 
     return response

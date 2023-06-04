@@ -5,6 +5,8 @@ from fastapi import FastAPI, HTTPException,File, UploadFile
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 import asyncio
+from typing import List
+import routers.model_requests as ML_R
 
 import aiofiles
 import os
@@ -109,21 +111,23 @@ def check_login(username: str, password: str):
                 return {'message': 'Login successful'}
     raise HTTPException(status_code=401, detail='Invalid credentials')
 
-@app.post("/uploadfile/")
-async def create_upload_file(file: UploadFile = File(...)):
+@app.post("/uploadfile/{query}/{options}")
+async def create_upload_file(options :str, query:str,file: UploadFile = File(...)):
+    options_list = get_options_list(options)
+    print(options_list)
     contents = await file.read()  # binary read
-
     # Save file to disk
     filename = file.filename
     async with aiofiles.open(filename, 'wb') as f:
         await f.write(contents)
-    await asyncio.sleep(3)
+    response = ML_R.send_request(query,os.path.abspath(filename),options_list)
+    return response
+    #Return response with saved file
+    # file_path = os.path.abspath(filename)
+    # return FileResponse(file_path, media_type="video/mp4", filename=filename)
 
-    # Return response with saved file
-    file_path = os.path.abspath(filename)
-    return FileResponse(file_path, media_type="video/mp4", filename=filename)
-
-
+def get_options_list(options):
+    return [element.strip() for element in options.split(',')]
 @app.post("/clear")
 def clear_collection():
     """Clears all data from the database."""

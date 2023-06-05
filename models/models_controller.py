@@ -87,6 +87,7 @@ def process_query(query_dict):
         similarity_threshold=0.9
     )
     # Replace video_path in query with compressed path instead
+    original_video_path = query_dict['video_path']
     query_dict['video_path'] = compressed_name
     print(f'[MODEL CONTROLLER]: Finished compressing video. Time elapsed: {time.time() - compression_start}')
 
@@ -103,7 +104,7 @@ def process_query(query_dict):
     response = { 'id': query_dict['id'] }
 
     # Pull responses from response queue (num responses = num models requested in query)
-    for i in range(len(query_dict['models'])):
+    for _ in range(len(query_dict['models'])):
         # Pull a response from the queue
         resp = model_response_queue.get(block=True) # Block if necessary
         # Reconstruct intervals from response to original video
@@ -114,7 +115,7 @@ def process_query(query_dict):
         print(f'[MODEL CONTROLLER]: got response for #{query_dict["id"]}: {resp}')
 
     # Add num frames
-    response['num_frames'] = preprocessing.get_num_frames(query_dict['video_path'])
+    response['num_frames'] = preprocessing.get_num_frames(original_video_path)
     print(f'[MODEL CONTROLLER]: Query: {query_dict["id"]} finished. Response: {response}\nTotal time elapsed: {time.time() - start}')
 
     return response

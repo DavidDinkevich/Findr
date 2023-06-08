@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useRef } from 'react';
 import Dropzone from 'react-dropzone';
 import ReactPlayer from 'react-player';
 import './main-window.css';
@@ -7,6 +7,7 @@ import Logo from '../only_logo.png';
 import { useNavigate } from 'react-router-dom';
 
 function VideoUploader() {
+  const videoRef = useRef(null);
   const [videoFile, setVideoFile] = useState(null);
   const navigate = useNavigate();
   const [query, setQuery] = useState('');
@@ -50,6 +51,28 @@ function VideoUploader() {
     setShowModal(false);
   };
 
+  function getFirstIntervalValues(data) {
+    const result = [];
+    const jsonData = JSON.stringify(data)
+    console.log(typeof jsonData)
+    for (const model of Object.values(jsonData)) {
+      console.log("went in",model,"bla")
+      if (Array.isArray(model)) {
+        
+        for (const item of model) {
+          if (item.hasOwnProperty('interval') && Array.isArray(item.interval) && item.interval.length > 0) {
+            result.push(item.interval[0]);
+          }
+        }
+      }
+    }
+  
+    return result;
+  }
+  
+  
+  
+
   const getResults = async () => {
     if (!videoFile) {
       setErrorMessage('Please upload a video.');
@@ -72,12 +95,20 @@ function VideoUploader() {
           'Content-Type': 'multipart/form-data'
         }
       });
-      const jumpPoints = [2, 4, 6];
+      //const jumpPoints = [2, 4, 6];   
       const model = 'clip'
-      console.log(response.data);
+      const parts = response.data.split('&')
+      console.log("parts zero",typeof parts[0],parts[0])
+      const jumpPoints = JSON.parse(parts[0]).map(Number)
+      console.log("parts zero",typeof jumpPoints,jumpPoints)
+      console.log("second",parts[1])
       if (response.status === 200) {
         console.log('File uploaded successfully');
         navigate('/videoPlayer/', { state: { videoFile: videoFile, jumpPoints, model} });
+        // const results = response.data
+        // console.log('hi')
+        // console.log(results);
+        // navigate('/resultsProcessor/', { state: { videoFile: videoFile, results:results} });
       }
     } catch (error) {
       console.error('Error uploading file:', error);
@@ -125,6 +156,7 @@ function VideoUploader() {
           ) : (
             <div className="video-player-wrapper">
               <ReactPlayer
+                ref={videoRef}
                 url={URL.createObjectURL(videoFile)}
                 className="video-player"
                 controls

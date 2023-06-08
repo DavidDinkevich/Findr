@@ -2,11 +2,10 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import db
 from fastapi import FastAPI, HTTPException,File, UploadFile
-from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
-import asyncio
-from typing import List
 import routers.model_requests as ML_R
+from utils import *
+from moviepy.editor import VideoFileClip
 
 import aiofiles
 import os
@@ -120,8 +119,11 @@ async def create_upload_file(options :str, query:str,file: UploadFile = File(...
     filename = file.filename
     async with aiofiles.open(filename, 'wb') as f:
         await f.write(contents)
+    clip = VideoFileClip(os.path.abspath(filename))
+    duration = clip.duration
     response = ML_R.send_request(query,os.path.abspath(filename),options_list)
-    return response
+    seconds_response = frames_to_seconds(get_first_interval_values(response),json.loads(response)['num_frames'],duration)
+    return str(seconds_response) + '&' +str(response)
     #Return response with saved file
     # file_path = os.path.abspath(filename)
     # return FileResponse(file_path, media_type="video/mp4", filename=filename)

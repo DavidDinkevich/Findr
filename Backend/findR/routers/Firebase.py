@@ -110,6 +110,7 @@ def check_login(username: str, password: str):
                 return {'message': 'Login successful'}
     raise HTTPException(status_code=401, detail='Invalid credentials')
 
+#endpoint to return user results to FE
 @app.post("/uploadfile/{query}/{options}")
 async def create_upload_file(options :str, query:str,file: UploadFile = File(...)):
     options_list = get_options_list(options)
@@ -122,8 +123,11 @@ async def create_upload_file(options :str, query:str,file: UploadFile = File(...
     clip = VideoFileClip(os.path.abspath(filename))
     duration = clip.duration
     response = ML_R.send_request(query,os.path.abspath(filename),options_list)
-    seconds_response = frames_to_seconds(get_first_interval_values(response),json.loads(response)['num_frames'],duration)
-    return str(seconds_response) + '&' +str(response)
+    processed_results =process_results(response)
+    seconds_response = frames_to_seconds(processed_results[0],json.loads(response)['num_frames'],duration)
+    processed = processed_results[1]
+    print('bla')
+    return str(seconds_response) + '&' +str(processed)
     #Return response with saved file
     # file_path = os.path.abspath(filename)
     # return FileResponse(file_path, media_type="video/mp4", filename=filename)

@@ -30,44 +30,35 @@ function VideoPlayerWrapper() {
 
 export default App;
 
-
-
-
-// import React from 'react';
-// import HeatMap from './heatMap/heatMap';
+// import React, { useState } from 'react';
+// import LoadingSpinner from './loadingComponent/loading';
 
 // const App = () => {
-//   const data = {
-//     'efficientnet': {
-//         'intervals': [[0, 155], [264, 458], [459, 481]],
-//         'accuracies': ['30', '94.15', '94.29'],
-//         'num_frames': 482
-//     },
-//     'resnet': {
-//         'intervals': [[0, 155], [264, 458], [459, 481]],
-//         'accuracies': ['99.88', '88.52', '99.86'],
-//         'num_frames': 482
-//     },
-//     'inceptionv3': {
-//         'intervals': [[0, 155], [264, 458], [459, 481]],
-//         'accuracies': ['100.00', '100.00', '99.99'],
-//         'num_frames': 482
-//     },
-//     'yolov5': {
-//         'intervals': [],
-//         'accuracies': [],
-//         'num_frames': 482
-//     },
-//     'clip': {
-//         'intervals': [[0, 155], [156, 263], [264, 481]],
-//         'accuracies': [93, 69, 87],
-//         'num_frames': 482
-//     }
-// };
+//   const [isLoading, setIsLoading] = useState(false);
 
-//   return <HeatMap data={data} />;
+//   const fetchData = () => {
+//     setIsLoading(true);
+//     // Simulate an asynchronous operation
+//     setTimeout(() => {
+//       setIsLoading(false);
+//     }, 2000);
+//   };
+
+//   return (
+//     <div>
+//       <h1>Welcome to My App</h1>
+//       <button onClick={fetchData}>Fetch Data</button>
+//       <LoadingSpinner show={isLoading} message="Please wait while we process your request..." />
+//     </div>
+//   );
 // };
 
 // export default App;
+
+
+
+
+
+
 
 

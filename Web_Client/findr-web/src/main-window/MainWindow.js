@@ -4,6 +4,7 @@ import ReactPlayer from 'react-player';
 import './main-window.css';
 import axios from 'axios';
 import Logo from '../only_logo.png';
+import LoadingSpinner from '../loadingComponent/loading';
 import { useNavigate } from 'react-router-dom';
 
 function VideoUploader() {
@@ -20,6 +21,7 @@ function VideoUploader() {
     efficientnet: false
   });
   const [showModal, setShowModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleQueryChange = (event) => {
     setQuery(event.target.value);
@@ -68,25 +70,20 @@ function VideoUploader() {
     formData.append('file', videoFile);
     try {
       console.log(checkboxValues);
+      setIsLoading(true);
       const response = await axios.post(`http://localhost:5002/uploadfile/${query}/${generateStringFromCheckboxValues(checkboxValues)}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       });
+      setIsLoading(false);
       console.log(response.data)
       const parts = response.data.split('&')
       const jumpPoints = JSON.parse(parts[0]).map(Number)
-      console.log("parts zero",typeof jumpPoints,jumpPoints)
-      console.log(parts[1])
       const processedResults = parts[1]
-      console.log("parts one",typeof processedResults,processedResults)
       if (response.status === 200) {
         console.log('File uploaded successfully');
         navigate('/results/', { state: { videoFile: videoFile, jumpPoints, processedResults} });
-        // const results = response.data
-        // console.log('hi')
-        // console.log(results);
-        // navigate('/resultsProcessor/', { state: { videoFile: videoFile, results:results} });
       }
     } catch (error) {
       console.error('Error uploading file:', error);
@@ -236,6 +233,7 @@ function VideoUploader() {
           <button type="button" onClick={handleCloseModal}>Close</button>
         </div>
       )}
+      <LoadingSpinner show={isLoading} message="Please wait while we process your request..." />
     </div>
   );
   

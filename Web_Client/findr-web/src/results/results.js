@@ -9,33 +9,7 @@ function VideoPlayer(props) {
   const [playing, setPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [currentIndex, setCurrentIndex] = useState(-1);
-//   const data = {
-//     'efficientnet': {
-//         'intervals': [[0, 155], [264, 458], [459, 481]],
-//         'accuracies': ['30', '94.15', '94.29'],
-//         'num_frames': 482
-//     },
-//     'resnet': {
-//         'intervals': [[0, 155], [264, 458], [459, 481]],
-//         'accuracies': ['99.88', '88.52', '99.86'],
-//         'num_frames': 482
-//     },
-//     'inceptionv3': {
-//         'intervals': [[0, 155], [264, 458], [459, 481]],
-//         'accuracies': ['100.00', '100.00', '99.99'],
-//         'num_frames': 482
-//     },
-//     'yolov5': {
-//         'intervals': [],
-//         'accuracies': [],
-//         'num_frames': 482
-//     },
-//     'clip': {
-//         'intervals': [[0, 155], [156, 263], [264, 481]],
-//         'accuracies': [93, 69, 87],
-//         'num_frames': 482
-//     }
-// };
+  const data = JSON.parse(props.results.replace(/'/g, '"'))
   useEffect(() => {
     if (videoRef.current) {
       videoRef.current.seekTo(currentTime);
@@ -43,22 +17,26 @@ function VideoPlayer(props) {
   }, [currentTime]);
 
   const handleReady = () => {
-    console.log('hi')
-    //console.log("data",typeof data, data)
     const data_try = JSON.parse(props.results.replace(/'/g, '"'))
-    console.log("results",typeof data_try, data_try)
-    console.log('hi')
+    console.log(data_try)
   };
 
-  const data = JSON.parse(props.results.replace(/'/g, '"'))
+  
 
 
   const handleJumpButtonClick = () => {
-    if (currentIndex < props.numberList.length) {
+    const lastIndex = props.numberList.length - 1;
+    if (currentIndex < lastIndex) {
       const nextIndex = currentIndex + 1;
       const nextNumber = props.numberList[nextIndex];
       setCurrentIndex(nextIndex);
-      setCurrentTime(nextNumber);
+      if (typeof nextNumber === 'number' && isFinite(nextNumber)) {
+        setCurrentTime(nextNumber);
+      }
+      setPlaying(false);
+    } else {
+      setCurrentIndex(0);
+      setCurrentTime(props.numberList[0]);
       setPlaying(false);
     }
   };
@@ -73,7 +51,7 @@ function VideoPlayer(props) {
       <div className="logo_header">
         <img src={Logo} alt="Logo" className="logo" />
       </div>
-      
+      <div className="results-wrapper">
       <div className="video-wrapper">
         <div className="video-container">
           <ReactPlayer
@@ -96,6 +74,7 @@ function VideoPlayer(props) {
       </div>
       <div>
       <HeatMap data={data} />
+      </div>
       </div>
     </div>
   );

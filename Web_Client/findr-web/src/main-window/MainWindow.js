@@ -51,28 +51,6 @@ function VideoUploader() {
     setShowModal(false);
   };
 
-  function getFirstIntervalValues(data) {
-    const result = [];
-    const jsonData = JSON.stringify(data)
-    console.log(typeof jsonData)
-    for (const model of Object.values(jsonData)) {
-      console.log("went in",model,"bla")
-      if (Array.isArray(model)) {
-        
-        for (const item of model) {
-          if (item.hasOwnProperty('interval') && Array.isArray(item.interval) && item.interval.length > 0) {
-            result.push(item.interval[0]);
-          }
-        }
-      }
-    }
-  
-    return result;
-  }
-  
-  
-  
-
   const getResults = async () => {
     if (!videoFile) {
       setErrorMessage('Please upload a video.');
@@ -95,16 +73,16 @@ function VideoUploader() {
           'Content-Type': 'multipart/form-data'
         }
       });
-      //const jumpPoints = [2, 4, 6];   
-      const model = 'clip'
+      console.log(response.data)
       const parts = response.data.split('&')
-      console.log("parts zero",typeof parts[0],parts[0])
       const jumpPoints = JSON.parse(parts[0]).map(Number)
       console.log("parts zero",typeof jumpPoints,jumpPoints)
-      console.log("second",parts[1])
+      console.log(parts[1])
+      const processedResults = parts[1]
+      console.log("parts one",typeof processedResults,processedResults)
       if (response.status === 200) {
         console.log('File uploaded successfully');
-        navigate('/videoPlayer/', { state: { videoFile: videoFile, jumpPoints, model} });
+        navigate('/videoPlayer/', { state: { videoFile: videoFile, jumpPoints, processedResults} });
         // const results = response.data
         // console.log('hi')
         // console.log(results);

@@ -2,16 +2,40 @@ import React, { useState, useEffect, useRef } from "react";
 import './results.css';
 import ReactPlayer from 'react-player';
 import Logo from '../only_logo.png';
+import HeatMap from '../heatMap/heatMap';
 
 function VideoPlayer(props) {
   const videoRef = useRef(null);
   const [playing, setPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [currentIndex, setCurrentIndex] = useState(-1);
-  const [frameCount, setFrameCount] = useState(0);
-  const [length, setLength] = useState(0);
-  const model = props.modelName;
-
+//   const data = {
+//     'efficientnet': {
+//         'intervals': [[0, 155], [264, 458], [459, 481]],
+//         'accuracies': ['30', '94.15', '94.29'],
+//         'num_frames': 482
+//     },
+//     'resnet': {
+//         'intervals': [[0, 155], [264, 458], [459, 481]],
+//         'accuracies': ['99.88', '88.52', '99.86'],
+//         'num_frames': 482
+//     },
+//     'inceptionv3': {
+//         'intervals': [[0, 155], [264, 458], [459, 481]],
+//         'accuracies': ['100.00', '100.00', '99.99'],
+//         'num_frames': 482
+//     },
+//     'yolov5': {
+//         'intervals': [],
+//         'accuracies': [],
+//         'num_frames': 482
+//     },
+//     'clip': {
+//         'intervals': [[0, 155], [156, 263], [264, 481]],
+//         'accuracies': [93, 69, 87],
+//         'num_frames': 482
+//     }
+// };
   useEffect(() => {
     if (videoRef.current) {
       videoRef.current.seekTo(currentTime);
@@ -19,21 +43,14 @@ function VideoPlayer(props) {
   }, [currentTime]);
 
   const handleReady = () => {
-    if (videoRef.current) {
-      const videoElement = videoRef.current.getInternalPlayer();
-      const duration = videoElement.duration;
-      const frameRate = videoElement.webkitDecodedFrameRate || 30; // Assuming a default frame rate of 30 if not available
-      const frames = Math.floor(duration * frameRate);
-      setFrameCount(frames);
-      setLength(videoRef.current.getDuration());
-      console.log("inside handle ready")
-      console.log("video length",length);
-    }
+    console.log('hi')
+    //console.log("data",typeof data, data)
+    const data_try = JSON.parse(props.results.replace(/'/g, '"'))
+    console.log("results",typeof data_try, data_try)
+    console.log('hi')
   };
 
-  function frameToSecond(frame, numFrames, numSeconds) {
-    return numSeconds * (frame / numFrames);
-  }
+  const data = JSON.parse(props.results.replace(/'/g, '"'))
 
 
   const handleJumpButtonClick = () => {
@@ -58,7 +75,6 @@ function VideoPlayer(props) {
       </div>
       
       <div className="video-wrapper">
-      <h1> Algorithm results</h1>
         <div className="video-container">
           <ReactPlayer
             ref={videoRef}
@@ -77,6 +93,9 @@ function VideoPlayer(props) {
             Jump to Next Number
           </button>
         </div>
+      </div>
+      <div>
+      <HeatMap data={data} />
       </div>
     </div>
   );

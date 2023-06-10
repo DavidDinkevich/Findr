@@ -1,30 +1,27 @@
 import React from 'react';
 
 const BarChart = ({ modelName, intervals, accuracies, numFrames, color }) => {
-  const barWidth = 400; // Width of the bar (in pixels)
+  const barWidth = 500; // Width of the bar (in pixels)
   const barHeight = 20; // Height of the bar (in pixels)
 
-  const calculateIntervalWidth = (interval) => {
+  const calculateIntervalPosition = (interval) => {
     const [start, end] = interval;
-    return ((end - start) / numFrames) * barWidth;
+    const totalFrames = numFrames - start; // Number of frames remaining in the bar after the start of the interval
+    const intervalWidth = (end - start) / numFrames * barWidth;
+    const intervalPosition = (start / numFrames) * barWidth;
+    return [intervalWidth, intervalPosition];
   };
 
   const getColorForAccuracy = (accuracy) => {
-    // Sort the accuracies in ascending order
-    const sortedAccuracies = [...accuracies].sort((a, b) => a - b);
+    // Define the color range
+    const minColor = [204,235,197]; // light green
+    const maxColor = [6, 59, 0]; // dark green
   
-    // Calculate the index of the accuracy within the sorted array
-    const index = sortedAccuracies.indexOf(accuracy);
-  
-    // Calculate the color based on the position of the accuracy
-    const minColor = [14,255,0]; // light green
-    const maxColor = [6,59,0]; // dark Green
-  
+    // Calculate the interpolated color based on the given accuracy value
     const interpolatedColor = minColor.map((min, i) => {
       const max = maxColor[i];
       const range = max - min;
-      const step = range / (sortedAccuracies.length - 1);
-      const interpolatedValue = Math.round(min + step * index);
+      const interpolatedValue = Math.round(min + range * (accuracy/100));
       return interpolatedValue;
     });
   
@@ -35,11 +32,10 @@ const BarChart = ({ modelName, intervals, accuracies, numFrames, color }) => {
   
   
   
-  
 
   const renderIntervals = () => {
     return intervals.map((interval, index) => {
-      const intervalWidth = calculateIntervalWidth(interval);
+      const [intervalWidth, intervalPosition] = calculateIntervalPosition(interval);
       const accuracy = accuracies[index];
       const intervalColor = getColorForAccuracy(accuracy);
 
@@ -48,6 +44,8 @@ const BarChart = ({ modelName, intervals, accuracies, numFrames, color }) => {
         backgroundColor: intervalColor,
         display: 'inline-block',
         height: barHeight,
+        position: 'absolute',
+        left: intervalPosition,
       };
 
       return (
@@ -71,7 +69,9 @@ const BarChart = ({ modelName, intervals, accuracies, numFrames, color }) => {
   return (
     <div>
       <h2>{modelName}</h2>
-      <div style={barStyle}>{renderIntervals()}</div>
+      <div style={barStyle}>
+        <div style={{ position: 'relative', width: '100%' }}>{renderIntervals()}</div>
+      </div>
     </div>
   );
 };

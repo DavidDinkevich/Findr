@@ -82,7 +82,7 @@ function VideoUploader() {
       console.log("parts one",typeof processedResults,processedResults)
       if (response.status === 200) {
         console.log('File uploaded successfully');
-        navigate('/videoPlayer/', { state: { videoFile: videoFile, jumpPoints, processedResults} });
+        navigate('/results/', { state: { videoFile: videoFile, jumpPoints, processedResults} });
         // const results = response.data
         // console.log('hi')
         // console.log(results);

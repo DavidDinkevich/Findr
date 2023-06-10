@@ -14,7 +14,7 @@ function App() {
         <Route exact path="/" element={<Login/>} />
         <Route path="/uploadVideo" element={<VideoUploader />} />
         <Route path="/signup" element={<SignupPage/>} />
-        <Route path="/videoPlayer" element={<VideoPlayerWrapper />} />
+        <Route path="/results" element={<VideoPlayerWrapper />} />
       </Routes>
     </Router>
   );

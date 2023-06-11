@@ -1,0 +1,43 @@
+/* top-bar.css */
+
+.top-bar {
+    position: relative;
+    background-color: rgb(23, 59, 103);
+    height: 65px;
+  }
+  
+  .bar-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    height: 100%;
+  }
+  
+  .logo {
+    width: 150px;
+    height: 75px;
+  }
+  
+  .button-container {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .button {
+    padding: 8px 16px;
+    background-color: transparent;
+    border-radius: 4px;
+    text-decoration: none;
+    color: white;
+  }
+  
+  .line {
+    position: absolute;
+    left: 20px;
+    right: 20px;
+    bottom: 0;
+    height: 2px;
+    background-color: #408EC6;
+  }
+  

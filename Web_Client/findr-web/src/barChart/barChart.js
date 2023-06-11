@@ -1,4 +1,5 @@
 import React from 'react';
+import './bar-chart.css';
 
 const BarChart = ({ modelName, intervals, accuracies, numFrames, color }) => {
   const barWidth = 500; // Width of the bar (in pixels)
@@ -68,7 +69,7 @@ const BarChart = ({ modelName, intervals, accuracies, numFrames, color }) => {
 
   return (
     <div>
-      <h2>{modelName}</h2>
+      <h2 style={{ color: 'rgb(0, 255, 42)', fontSize: '26px' }}>{modelName}</h2>
       <div style={barStyle}>
         <div style={{ position: 'relative', width: '100%' }}>{renderIntervals()}</div>
       </div>

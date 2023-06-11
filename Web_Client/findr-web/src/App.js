@@ -30,30 +30,34 @@ function VideoPlayerWrapper() {
 
 export default App;
 
-// import React, { useState } from 'react';
-// import LoadingSpinner from './loadingComponent/loading';
+// import React from 'react';
+// import TopBar from './topBar/topBar';
+// import Logo from './only_logo.png';
 
 // const App = () => {
-//   const [isLoading, setIsLoading] = useState(false);
 
-//   const fetchData = () => {
-//     setIsLoading(true);
-//     // Simulate an asynchronous operation
-//     setTimeout(() => {
-//       setIsLoading(false);
-//     }, 2000);
-//   };
+//   const buttons = [
+//     {
+//       name: 'Button 1',
+//       route: '/route1',
+//     },
+//     {
+//       name: 'Button 2',
+//       route: '/route2',
+//     },
+//   ];
 
 //   return (
 //     <div>
-//       <h1>Welcome to My App</h1>
-//       <button onClick={fetchData}>Fetch Data</button>
-//       <LoadingSpinner show={isLoading} message="Please wait while we process your request..." />
+//       <TopBar logo={Logo} buttons={buttons} />
+//       {/* Rest of your application */}
 //     </div>
 //   );
 // };
 
 // export default App;
+
+
 
 
 

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Logo from '../only_logo.png';
 import axios from 'axios';
+import TopBar from '../topBar/topBar'
 import './login-page.css';
 
 const Login = () => {
@@ -9,6 +10,17 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
+
+    const buttons = [
+    {
+      name: 'Login',
+      route: '/',
+    },
+    {
+      name: 'Signup',
+      route: '/signup',
+    },
+  ];
 
   const handleSubmit = async (e, username, password) => {
     e.preventDefault();
@@ -28,11 +40,12 @@ const Login = () => {
 
 
   return (
+    <div>
+      <TopBar logo={Logo} buttons={buttons} />
     <div className="container">
-      <img src={Logo} alt="Logo" className="logo" />
       <div className="sidebar">
       <h1>Introducing findR</h1>     
-        <p>findR is a powerful tool that allows you to extract frames from a video based on a text description of the content. Simply enter the text description of the frame you want to extract, and our app will analyze the video to find the corresponding frame.</p>
+        <p>findR is a powerful tool that allows you to find the place in a video based on a text description of the content. Simply enter the text description of the frame you want to extract, and our app will analyze the video to find the corresponding frame.</p>
       </div>
     <div className="login-container">
 
@@ -57,11 +70,12 @@ const Login = () => {
           />
         </label>
         <p style={{ color: 'red', marginTop: '0.5rem' }}>{errorMessage}</p>
-        <div className="button-container">
-          <button type="submit">Submit</button>
-          <button onClick={() => navigate('/signup')}>Sign up</button>
+        <div className="button-container" id="myButtonContainer">
+          <button type="submit" className="styled-button">Login</button>
+          <button onClick={() => navigate('/signup')} className="styled-button">Sign up</button>
         </div>
       </form>
+    </div>
     </div>
     </div>
   );

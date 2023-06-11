@@ -1,105 +1,90 @@
 .signup-container {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background: linear-gradient(to right, #92cdaf, #7a88d0);
-    animation: gradient 10s ease infinite;
-  }
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: rgb(23, 59, 103);
+  animation: gradient 10s ease infinite;
+  
+}
 
-  @keyframes gradient {
-    0% {
-      background-position: 0% 50%;
-    }
-    50% {
-      background-position: 100% 50%;
-    }
-    100% {
-      background-position: 0% 50%;
-    }
-  }
+.image-container {
+  flex: 1; /* Take up remaining space */
+  display: flex;
+  justify-content: center;
+  align-items: center;
   
-  .logo-container {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .logo-container.left {
-    justify-content: center;
-  }
-  
-  .logo-container.right {
-    justify-content: center;
-  }
-  
-  .logo-container img {
-    width: 250px;
-    height: 130px; 
-  }
+}
 
-  .form-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    width: 30%;
-  }
+.form-container {
+  flex: 1; /* Take up remaining space */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 30%;
   
-  .form-header {
-    display: flex;
-    align-items: center;
-  }
+}
 
-  .form-container img {
-    width: 100px;
-    height: 50px;
-  }
+.form-header {
+  display: flex;
+  align-items: center;
   
-  h2 {
-    margin-right: 10px;
-    font-style: italic
-  }
-  
-  
-  .signup-form {
-    border: none;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    margin-top: 30px;
-    background-color: #ADD8E6;
-    width: 100%;
-  }
-  
-  .form-row {
-    margin-bottom: 10px;
-  }
-  
-  input[type=text], input[type=email], input[type=password] {
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    background-color: #f2f2f2;
-    font-size: 16px;
-  }
-  
-  button[type=submit] {
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    background-color: #0066cc;
-    color: #fff;
-    font-size: 16px;
-    cursor: pointer;
-  }
-  
-  button[type=submit]:hover {
-    background-color: #0052a3;
-  }
+}
 
-
+.form-container img {
+  width: 100px;
+  height: 50px;
   
+}
+
+h2 {
+  margin-right: 10px;
+  font-style: italic;
+  color: #f0eded;
+}
+
+.signup-form {
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 30px;
+  background-color: #408EC6;
+  width: 60%;
+}
+
+.form-row {
+  margin-bottom: 10px;
+}
+
+input[type=text], input[type=email], input[type=password] {
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  font-size: 16px;
+}
+
+button {
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  width: 90px;
+  background-color: #185886;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease; /* Add transition for smooth effect */
+}
+
+button:hover {
+  background-color: #112d41; /* Update the background color when hovering */
+}
+
+.image {
+  width: 450px; /* Adjust the width to your desired size */
+  height: auto; /* The height will adjust proportionally based on the width */
+}

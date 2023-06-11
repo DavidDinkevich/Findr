@@ -4,7 +4,7 @@ from firebase_admin import db
 from fastapi import FastAPI, HTTPException,File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 import routers.model_requests as ML_R
-from utils import *
+from controller_utils import *
 from moviepy.editor import VideoFileClip
 
 import aiofiles
@@ -42,9 +42,9 @@ def get_user(username: str):
 
 
 @app.post("/users/")
-def add_user(first_name: str, last_name: str,username: str, password: str, email: str):
+def add_user(full_name: str, username: str, password: str, email: str):
     # Check if the user already exists
-    print(first_name, last_name,username, password, email)
+    print(full_name, username, password, email)
     existing_user = ref.child('users').order_by_child('username').equal_to(username).get()
     for user_key, user_val in existing_user.items():
         if user_val.get('password') == password:
@@ -52,8 +52,7 @@ def add_user(first_name: str, last_name: str,username: str, password: str, email
 
     # Insert the user into the database
     user = {
-        "first_name": first_name,
-        "last_name": last_name,
+        "full_name": full_name,
         "username": username,
         "password": password,
         "email": email,

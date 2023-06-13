@@ -31,6 +31,11 @@
     border-radius: 50%;
     animation: spin 1s linear infinite;
   }
+
+  .loading-overlay .loading-content p {
+    font-size: 16px; /* Set the desired font size */
+    color: #292121; /* Set the desired color using hexadecimal notation */
+  }
   
   @keyframes spin {
     0% { transform: rotate(0deg); }

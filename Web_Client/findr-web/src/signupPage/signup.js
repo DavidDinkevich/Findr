@@ -21,7 +21,7 @@ function Signup() {
       route: '/',
     },
     {
-      name: 'Signup',
+      name: 'Sign up',
       route: '/signup',
     },
   ];
@@ -52,10 +52,11 @@ function Signup() {
     <div className="signup-container">
 
       <div className="form-container">
+ 
+        <form className="signup-form" onSubmit={handleSubmit}>
         <div className="form-header">
           <h2>Welcome to findR!</h2>
         </div>
-        <form className="signup-form" onSubmit={handleSubmit}>
           <div className="form-row">
             <input
               type="text"

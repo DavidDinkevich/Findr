@@ -15,8 +15,8 @@ const BarChart = ({ modelName, intervals, accuracies, numFrames, color }) => {
 
   const getColorForAccuracy = (accuracy) => {
     // Define the color range
-    const minColor = [204,235,197]; // light green
-    const maxColor = [6, 59, 0]; // dark green
+    const minColor = [225,245,254]; // light blue
+    const maxColor = [64, 196, 255]; // bright blue
   
     // Calculate the interpolated color based on the given accuracy value
     const interpolatedColor = minColor.map((min, i) => {
@@ -62,15 +62,15 @@ const BarChart = ({ modelName, intervals, accuracies, numFrames, color }) => {
   const barStyle = {
     width: barWidth,
     height: barHeight,
-    backgroundColor: 'lightgray',
+    backgroundColor: 'white',
     position: 'relative',
     marginTop: '10px',
   };
 
   return (
     <div>
-      <h2 style={{ color: 'rgb(0, 255, 42)', fontSize: '26px' }}>{modelName}</h2>
-      <div style={barStyle}>
+      <h2 style={{ color: 'rgb(255, 255, 255)', fontSize: '26px' }}>{modelName}</h2>
+      <div style={barStyle} className="heat-bar">
         <div style={{ position: 'relative', width: '100%' }}>{renderIntervals()}</div>
       </div>
     </div>

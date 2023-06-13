@@ -17,7 +17,7 @@ const Login = () => {
       route: '/',
     },
     {
-      name: 'Signup',
+      name: 'Sign up',
       route: '/signup',
     },
   ];
@@ -51,24 +51,24 @@ const Login = () => {
 
       <form onSubmit={(e) => handleSubmit(e, username, password)}>
         <h2>Login</h2>
-        <label>
-          Username:
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
-        </label>
-        <label>
-          Password:
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </label>
+        <div className="form-row">
+            <input
+              type="Username"
+              placeholder="Username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+            />
+          </div>
+          <div className="form-row">
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
         <p style={{ color: 'red', marginTop: '0.5rem' }}>{errorMessage}</p>
         <div className="button-container" id="myButtonContainer">
           <button type="submit" className="styled-button">Login</button>

@@ -5,14 +5,14 @@
   align-items: center;
   height: 100vh;
   background-color: rgb(23, 59, 103);
-  animation: gradient 10s ease infinite;
+  
   
 }
 
 .image-container {
   flex: 1; /* Take up remaining space */
   display: flex;
-  justify-content: center;
+  justify-content: left; 
   align-items: center;
   
 }
@@ -23,7 +23,7 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  width: 30%;
+  width: 30%; 
   
 }
 
@@ -53,7 +53,9 @@ h2 {
   flex-direction: column;
   margin-top: 30px;
   background-color: #408EC6;
+  border: 2px solid #000;
   width: 60%;
+  
 }
 
 .form-row {
@@ -85,6 +87,8 @@ button:hover {
 }
 
 .image {
-  width: 450px; /* Adjust the width to your desired size */
+  margin-left:2rem;
+  width: 500px; /* Adjust the width to your desired size */
   height: auto; /* The height will adjust proportionally based on the width */
+  
 }

@@ -8,7 +8,7 @@
   background: rgb(23, 59, 103);
   background-size: 200% 200%;
   position: relative;
-  animation: gradient 10s ease infinite;
+  
 }
 .login-container {
     flex: 1;
@@ -18,7 +18,7 @@
     align-items: center;
     height: 100vh;
     padding: 2rem;
-
+    
   }
 
   #myButtonContainer .styled-button {
@@ -44,25 +44,11 @@
 
 
 
-  
-  @keyframes gradient {
-    0% {
-      background-position: 0% 50%;
-    }
-    50% {
-      background-position: 100% 50%;
-    }
-    100% {
-      background-position: 0% 50%;
-    }
-  }
-  
-
   form {
   display: flex;
   flex-direction: column;
   align-items: center;
-  border: 1.5px solid rgb(14, 4, 1);
+  border: 1px solid rgb(14, 4, 1);
   border-radius: 1rem;
   background-color: #408EC6;
   width: 40%;

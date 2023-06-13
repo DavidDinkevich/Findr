@@ -10,7 +10,7 @@ const LoadingSpinner = ({ show, message }) => {
       <div className="loading-overlay">
         <div className="loading-content">
           <div className="loading-spinner"></div>
-          <p>{message}</p>
+          <p >{message}</p>
         </div>
       </div>
     );

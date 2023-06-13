@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import './results.css';
 import ReactPlayer from 'react-player';
 import Logo from '../only_logo.png';
+import TopBar from '../topBar/topBar'
 import HeatMap from '../heatMap/heatMap';
 
 function VideoPlayer(props) {
@@ -20,6 +21,17 @@ function VideoPlayer(props) {
     const data_try = JSON.parse(props.results.replace(/'/g, '"'))
     console.log(data_try)
   };
+
+  const buttons = [
+    {
+      name: 'Sign out',
+      route: '/',
+    },
+    {
+      name: 'Sign up',
+      route: '/signup',
+    },
+  ];
 
   
 
@@ -47,9 +59,12 @@ function VideoPlayer(props) {
 
 
   return (
+    <div>
+      <TopBar logo={Logo} buttons={buttons} />
     <div id='main_div'>
+      
       <div className="logo_header">
-        <img src={Logo} alt="Logo" className="logo" />
+      
       </div>
       <div className="results-wrapper">
       <div className="video-wrapper">
@@ -72,10 +87,11 @@ function VideoPlayer(props) {
           </button>
         </div>
       </div>
-      <div>
+      <div className="heat-map-wrapper">
       <HeatMap data={data} />
       </div>
       </div>
+    </div>
     </div>
   );
 }

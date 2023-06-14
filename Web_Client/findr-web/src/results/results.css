@@ -9,10 +9,10 @@
 }
 
 .results-wrapper {
-  width: 90%;
+  width: 80%;
   display: flex;
   flex-direction: row;
-  outline: 2px solid rgb(226, 32, 84);
+  /* outline: 2px solid rgb(226, 32, 84); */
   
 }
 
@@ -21,8 +21,9 @@
   margin-top: 20px;
   max-width: 100%;
   height: auto;
-  outline: 2px solid rgb(0, 255, 102);
+  /* outline: 2px solid rgb(0, 255, 102); */
 }
+
 /* .video-wrapper {
   flex: 1;
   display: flex;
@@ -37,7 +38,7 @@
 
 .video-container {
   position: relative;
-  width: 500px;
+  width: 600px;
   padding-top: 56.25%; /* 16:9 aspect ratio */
   background-color: black;
   overflow: hidden; /* Ensure the progress bar doesn't overflow */
@@ -64,7 +65,8 @@
 .jump-button {
   margin: 5px;
   padding: 10px;
-  background-color: rgb(50, 32, 239);
+  background-color: #408EC6;
+  width:40%;
   border: none;
   cursor: pointer;
 }
@@ -75,5 +77,14 @@
 
 .heat-map-wrapper{
   margin-left: 5%;
-  outline: 2px solid rgb(31, 201, 216);
+  /* outline: 2px solid rgb(31, 201, 216); */
+}
+
+.jump-button.disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.jump-button.disabled:hover {
+  background-color: #ccc;
 }

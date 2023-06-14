@@ -20,6 +20,7 @@ function VideoPlayer(props) {
   const handleReady = () => {
     const data_try = JSON.parse(props.results.replace(/'/g, '"'))
     console.log(data_try)
+    console.log(props.numberList.length,props.numberList)
   };
 
   const buttons = [
@@ -38,18 +39,25 @@ function VideoPlayer(props) {
 
   const handleJumpButtonClick = () => {
     const lastIndex = props.numberList.length - 1;
-    if (currentIndex < lastIndex) {
-      const nextIndex = currentIndex + 1;
-      const nextNumber = props.numberList[nextIndex];
-      setCurrentIndex(nextIndex);
-      if (typeof nextNumber === 'number' && isFinite(nextNumber)) {
-        setCurrentTime(nextNumber);
+    
+    if (lastIndex >= 0) {
+      if (currentIndex < lastIndex) {
+        const nextIndex = currentIndex + 1;
+        const nextNumber = props.numberList[nextIndex];
+        setCurrentIndex(nextIndex);
+        if (typeof nextNumber === 'number' && isFinite(nextNumber)) {
+          setCurrentTime(nextNumber);
+        }
+        setPlaying(false);
+      } else {
+        setCurrentIndex(0);
+        setCurrentTime(props.numberList[0]);
+        setPlaying(false);
       }
-      setPlaying(false);
     } else {
-      setCurrentIndex(0);
-      setCurrentTime(props.numberList[0]);
-      setPlaying(false);
+      // Handle the case when the list is empty
+      // For example, you can display an error message or perform any desired action.
+      console.log("Number list is empty");
     }
   };
 
@@ -82,8 +90,12 @@ function VideoPlayer(props) {
           />
         </div>
         <div className="jump-button-wrapper">
-          <button className="jump-button" onClick={handleJumpButtonClick}>
-            Jump to Next Number
+        <button
+              className={`jump-button ${props.numberList.length === 0 ? 'disabled' : ''}`}
+              onClick={handleJumpButtonClick}
+              disabled={props.numberList.length === 0}
+            >
+            Jump to Next Result
           </button>
         </div>
       </div>

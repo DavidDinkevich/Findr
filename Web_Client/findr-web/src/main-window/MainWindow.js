@@ -67,6 +67,7 @@ function VideoUploader() {
   };
 
   const getResults = async () => {
+    //Error handling
     if (!videoFile) {
       setErrorMessage('Please upload a video.');
       setShowModal(true);
@@ -90,7 +91,6 @@ function VideoUploader() {
         }
       });
       setIsLoading(false);
-      console.log(response.data)
       const parts = response.data.split('&')
       const jumpPoints = JSON.parse(parts[0]).map(Number)
       const processedResults = parts[1]
@@ -99,17 +99,21 @@ function VideoUploader() {
         navigate('/results/', { state: { videoFile: videoFile, jumpPoints, processedResults} });
       }
     } catch (error) {
+      setErrorMessage('Network error');
+      setShowModal(true);
       console.error('Error uploading file:', error);
     }
   };
 
   const handleDrop = async (acceptedFiles) => {
     const file = acceptedFiles[0];
-  
+    //input validation
     if (file.type.startsWith('video/')) {
       setVideoFile(file);
       
     } else {
+      setErrorMessage('Please upload a video format file.');
+      setShowModal(true);
       console.log('Please upload a video file.');
     }
   };
@@ -123,12 +127,11 @@ function VideoUploader() {
     };
     input.click();
   };
-
+  const backroundColor = 'rgb(0, 0, 0)';
   return (
     <div >
       <TopBar logo={Logo} buttons={buttons} />
-    <div id='main_div'>
-      
+    <div id='main_div'>     
       <div className="container-div">
       <div className="content-wrapper">
         <div className="video-section">
@@ -161,7 +164,7 @@ function VideoUploader() {
   
         <div className="query-section">
           <input id='query_bar' type="text" className="form-control" placeholder="Enter your query here" value={query} onChange={handleQueryChange}/>
-          <button type="button" className="btn btn-custom get-results-button" onClick={getResults}>Find results</button>
+          <button type="button" className="get-results-button" onClick={getResults}>Find results</button>
         </div>
   
 
@@ -242,8 +245,8 @@ function VideoUploader() {
   
       {showModal && (
         <div className="popup">
-          <h2 style={{ color: 'rgb(0, 0, 0)', fontSize: '32px' }}>Error</h2>
-          <p style={{ color: 'rgb(0, 0, 0)', fontSize: '20px' }}>{errorMessage}</p>
+          <h2 style={{ color: backroundColor, fontSize: '32px' }}>Error</h2>
+          <p style={{ color: backroundColor, fontSize: '20px' }}>{errorMessage}</p>
           <button type="button" onClick={handleCloseModal}>Close</button>
         </div>
       )}

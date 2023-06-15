@@ -22,7 +22,8 @@ app.add_middleware(CORSMiddleware,
 path = "credentials\privateAccountKey.json"
 cred = credentials.Certificate(path)
 
-firebase_admin.initialize_app(cred, {'databaseURL': 'https://findr-78bed-default-rtdb.firebaseio.com'})
+firebase_url = 'https://findr-78bed-default-rtdb.firebaseio.com'
+firebase_admin.initialize_app(cred, {'databaseURL': firebase_url})
 
 # Get a reference to the root node of your database
 ref = db.reference('/')
@@ -44,7 +45,6 @@ def get_user(username: str):
 @app.post("/users/")
 def add_user(full_name: str, username: str, password: str, email: str):
     # Check if the user already exists
-    print(full_name, username, password, email)
     existing_user = ref.child('users').order_by_child('username').equal_to(username).get()
     for user_key, user_val in existing_user.items():
         if user_val.get('password') == password:
@@ -71,33 +71,6 @@ def get_all_users():
             users.append(user)
     return users
 
-@app.put("/users/{username}")
-def update_user(username: str, age: int = None):
-    try:
-        db = ref.child('users')
-        # Find the user with the given username
-        query = db.order_by_child('username').start_at(username)
-        results = query.get()
-
-        # Check if the user exists
-        if not results:
-            raise HTTPException(status_code=404, detail="User not found")
-
-        # Update the user object with the new data
-        for user_id, user_data in results.items():
-            user_data['age'] = age
-            db.child(user_id).set(user_data)
-
-        # Return a success message
-        return {"message": "User updated successfully"}
-
-    except HTTPException as e:
-        # Re-raise the HTTPException if the user is not found
-        raise e
-
-    except Exception as e:
-        # Handle any other exceptions
-        raise HTTPException(status_code=500, detail=str(e))
 
 # Endpoint for checking username and password
 @app.get('/login')
@@ -122,17 +95,17 @@ async def create_upload_file(options :str, query:str,file: UploadFile = File(...
     clip = VideoFileClip(os.path.abspath(filename))
     duration = clip.duration
     response = ML_R.send_request(query,os.path.abspath(filename),options_list)
-    processed_results =process_results(response)
+    processed_results = process_results(response)
     seconds_response = frames_to_seconds(processed_results[0],json.loads(response)['num_frames'],duration)
     processed = processed_results[1]
-    print('bla')
     return str(seconds_response) + '&' +str(processed)
-    #Return response with saved file
-    # file_path = os.path.abspath(filename)
-    # return FileResponse(file_path, media_type="video/mp4", filename=filename)
 
+'''
+Returns all the algorithms that user chose
+'''
 def get_options_list(options):
     return [element.strip() for element in options.split(',')]
+
 @app.post("/clear")
 def clear_collection():
     """Clears all data from the database."""

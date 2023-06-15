@@ -22,6 +22,7 @@ const Login = () => {
     },
   ];
 
+  //when user clicks submit, send authentication to BE and when response arrives go to main window
   const handleSubmit = async (e, username, password) => {
     e.preventDefault();
     try {
@@ -48,7 +49,6 @@ const Login = () => {
         <p>findR is a powerful tool that allows you to find the place in a video based on a text description of the content. Simply enter the text description of the frame you want to extract, and our app will analyze the video to find the corresponding frame.</p>
       </div>
     <div className="login-container">
-
       <form onSubmit={(e) => handleSubmit(e, username, password)}>
         <h2>Login</h2>
         <div className="form-row">

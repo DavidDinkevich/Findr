@@ -34,28 +34,20 @@ export default App;
 // import TopBar from './topBar/topBar';
 // import Logo from './only_logo.png';
 
+// import React from 'react';
+// import ParentComponent from './parent/parent';
+
 // const App = () => {
-
-//   const buttons = [
-//     {
-//       name: 'Button 1',
-//       route: '/route1',
-//     },
-//     {
-//       name: 'Button 2',
-//       route: '/route2',
-//     },
-//   ];
-
 //   return (
 //     <div>
-//       <TopBar logo={Logo} buttons={buttons} />
-//       {/* Rest of your application */}
+//       <h1>App Component</h1>
+//       <ParentComponent />
 //     </div>
 //   );
 // };
 
 // export default App;
+
 
 
 

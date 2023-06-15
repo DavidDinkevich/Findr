@@ -17,17 +17,17 @@ def process_results(json_string):
                 if key == 'clip':
                     for result in data[key]:
                             for interval in result['intervals']:
-                                intervals.append(interval)
-                                accuracies.append(int(result['accuracy'])*3)
                                 if (float(result['accuracy']) > 27):
                                     first_items.append(interval[0])
+                                    intervals.append(interval)
+                                    accuracies.append(int(result['accuracy'])*3)
                 else:
                     for item in data[key]:
                         intervals.append(item["interval"])
                         accuracies.append(float(item['accuracy']))
                         if (float(item['accuracy'])>80):
                             first_items.append(item["interval"][0])
-                intervals, accuracies = sort_and_unzip_lists(key,intervals, accuracies)
+                intervals, accuracies = sort_and_unzip_lists(intervals, accuracies)
                 model_dict['intervals']=intervals
                 model_dict['accuracies']=accuracies
                 model_dict['num_frames']=num_frames
@@ -39,15 +39,17 @@ def process_results(json_string):
     except json.JSONDecodeError:
         print("Invalid JSON string")
         return []
+
 def frames_to_seconds(first_items, num_frames, length):
     seconds=[]
-    for frame in first_items:
-        seconds.append(int(math.floor(length * (frame / num_frames))))
+    if num_frames > 0:
+        for frame in first_items:
+            seconds.append(length * (frame / num_frames))
     seconds=list(set(seconds))
     seconds.sort()
     return seconds
 
-def sort_and_unzip_lists(key,intervals, accuracies):
+def sort_and_unzip_lists(intervals, accuracies):
     # Zip the intervals and accuracies together
     if len(intervals) > 1:
         zipped_data = list(zip(intervals, accuracies))
@@ -60,8 +62,5 @@ def sort_and_unzip_lists(key,intervals, accuracies):
         return list(sorted_intervals), list(sorted_accuracies)
     return intervals, accuracies
 
-
-def overall_results(processed_results):
-    pass
 
 

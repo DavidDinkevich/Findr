@@ -33,11 +33,10 @@ function Signup() {
       return;
     }
     try {
-      const response = await axios.post(`http://localhost:5002/users?full_name=${fullName}&username=${username}&password=${password}&email=${email}`)
-   
+      const response = await axios.post(`http://localhost:5002/users?full_name=${fullName}&username=${username}&password=${password}&email=${email}`)   
       console.log(response.data);
       if (response.status === 200) {
-        // Redirect to login page
+        // Redirect to login page if signup is successful
         window.location.href = '/';
       }
     } catch (error) {

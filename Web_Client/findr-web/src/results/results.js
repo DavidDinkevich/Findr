@@ -1,51 +1,45 @@
 import React, { useState, useEffect, useRef } from "react";
-import './results.css';
-import ReactPlayer from 'react-player';
-import Logo from '../only_logo.png';
-import TopBar from '../topBar/topBar'
-import HeatMap from '../heatMap/heatMap';
+import "./results.css";
+import ReactPlayer from "react-player";
+import Logo from "../only_logo.png";
+import TopBar from "../topBar/topBar";
+import HeatMap from "../heatMap/heatMap";
 
 function VideoPlayer(props) {
   const videoRef = useRef(null);
   const [playing, setPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [currentIndex, setCurrentIndex] = useState(-1);
-  const data = JSON.parse(props.results.replace(/'/g, '"'))
+
+  const data = JSON.parse(props.results.replace(/'/g, '"'));
   useEffect(() => {
     if (videoRef.current) {
       videoRef.current.seekTo(currentTime);
     }
   }, [currentTime]);
 
-  const handleReady = () => {
-    const data_try = JSON.parse(props.results.replace(/'/g, '"'))
-    console.log(data_try)
-    console.log(props.numberList.length,props.numberList)
-  };
+
 
   const buttons = [
     {
-      name: 'Sign out',
-      route: '/',
+      name: "Sign out",
+      route: "/",
     },
     {
-      name: 'Sign up',
-      route: '/signup',
+      name: "Sign up",
+      route: "/signup",
     },
   ];
 
-  
-
-
   const handleJumpButtonClick = () => {
     const lastIndex = props.numberList.length - 1;
-    
+
     if (lastIndex >= 0) {
       if (currentIndex < lastIndex) {
         const nextIndex = currentIndex + 1;
         const nextNumber = props.numberList[nextIndex];
         setCurrentIndex(nextIndex);
-        if (typeof nextNumber === 'number' && isFinite(nextNumber)) {
+        if (typeof nextNumber === "number" && isFinite(nextNumber)) {
           setCurrentTime(nextNumber);
         }
         setPlaying(false);
@@ -55,8 +49,6 @@ function VideoPlayer(props) {
         setPlaying(false);
       }
     } else {
-      // Handle the case when the list is empty
-      // For example, you can display an error message or perform any desired action.
       console.log("Number list is empty");
     }
   };
@@ -65,45 +57,69 @@ function VideoPlayer(props) {
     setCurrentTime(seconds);
   };
 
+  const handleCaptureFrame = () => {
+    console.log(videoRef.current);  
+    const player = videoRef.current.getInternalPlayer();
+    console.log(player)
+    if (player) {
+      const canvas = document.createElement('canvas');
+      canvas.width = player.clientWidth;
+      canvas.height = player.clientHeight;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(player, 0, 0, canvas.width, canvas.height);
+      canvas.toBlob((blob) => {
+        const imageURL = URL.createObjectURL(blob);
+        downloadImage(imageURL);
+      });
+    }
+  };
+
+
+
+  const downloadImage = (imageURL) => {
+    const link = document.createElement("a");
+    link.href = imageURL;
+    link.download = "captured_frame.png";
+    link.click();
+  };
 
   return (
     <div>
       <TopBar logo={Logo} buttons={buttons} />
-    <div id='main_div'>
-      
-      <div className="logo_header">
-      
-      </div>
-      <div className="results-wrapper">
-      <div className="video-wrapper">
-        <div className="video-container">
-          <ReactPlayer
-            ref={videoRef}
-            url={URL.createObjectURL(props.video)}
-            playing={playing}
-            onSeek={handleSeek}
-            onReady={handleReady}
-            onEnded={() => setPlaying(false)}
-            controls
-            width="100%"
-            height="100%"
-          />
+      <div id="main_results_div">
+        <div className="logo_header"></div>
+        <div className="results-wrapper">
+          <div className="video-wrapper">
+            <div className="video-container">
+              <ReactPlayer
+                ref={videoRef}
+                url={URL.createObjectURL(props.video)}
+                playing={playing}
+                onSeek={handleSeek}
+                onEnded={() => setPlaying(false)}
+                controls
+                width="100%"
+                height="100%"
+              />
+            </div>
+            <div className="jump-button-wrapper">
+              <button
+                className={`jump-button ${
+                  props.numberList.length === 0 ? "disabled" : ""
+                }`}
+                onClick={handleJumpButtonClick}
+                disabled={props.numberList.length === 0}
+              >
+                Jump to Next Result
+              </button>
+              <button className="download-button" onClick={handleCaptureFrame}>Download Frame</button>
+            </div>
+          </div>
+          <div className="heat-map-wrapper">
+            <HeatMap data={data} />
+          </div>
         </div>
-        <div className="jump-button-wrapper">
-        <button
-              className={`jump-button ${props.numberList.length === 0 ? 'disabled' : ''}`}
-              onClick={handleJumpButtonClick}
-              disabled={props.numberList.length === 0}
-            >
-            Jump to Next Result
-          </button>
-        </div>
       </div>
-      <div className="heat-map-wrapper">
-      <HeatMap data={data} />
-      </div>
-      </div>
-    </div>
     </div>
   );
 }

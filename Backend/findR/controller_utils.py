@@ -32,6 +32,7 @@ def process_results(json_string):
                 model_dict['accuracies']=accuracies
                 model_dict['num_frames']=num_frames
                 processed_results[key]=model_dict
+                processed_results['overall_results']=json_string['overall_results']
         first_items = list(set(first_items))
         return first_items, processed_results
 

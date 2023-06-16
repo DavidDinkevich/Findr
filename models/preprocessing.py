@@ -90,7 +90,9 @@ def get_overall_accuracy(response_for_each_model):
                             if avg_acc > 1:
                                 avg_acc /= 100
                             num_models_that_answered += 1
-        resp['accuracies'].append(avg_acc / num_models_that_answered)
+        if num_models_that_answered > 0:
+            resp['accuracies'].append(avg_acc / num_models_that_answered)
+        resp['accuracies'].append(0)
     return resp
 
 

@@ -83,12 +83,13 @@ def get_overall_accuracy(response_for_each_model):
                             found = True
                             break
             else:
-                for match in response_for_each_model[model_name]:
-                    if match['interval'][0] <= i <= match['interval'][1]:
-                        avg_acc += float(match['accuracy'])
-                        if avg_acc > 1:
-                            avg_acc /= 100
-                        num_models_that_answered += 1
+                if model_name in response_for_each_model.keys():
+                    for match in response_for_each_model[model_name]:
+                        if match['interval'][0] <= i <= match['interval'][1]:
+                            avg_acc += float(match['accuracy'])
+                            if avg_acc > 1:
+                                avg_acc /= 100
+                            num_models_that_answered += 1
             resp['accuracies'].append(avg_acc / num_models_that_answered)
     return resp
 

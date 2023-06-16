@@ -79,7 +79,11 @@ def get_overall_accuracy(response_for_each_model):
                             break
                         for interval in match['intervals']:
                             if interval[0] <= i <= interval[1]:
-                                avg_acc += match['accuracy'] / 100
+                                acc = match['accuracy']
+                                if acc > 27:
+                                    acc *= 3
+                                avg_acc += acc / 100
+
                                 num_models_that_answered += 1
                                 found = True
                                 break
@@ -93,7 +97,8 @@ def get_overall_accuracy(response_for_each_model):
                             num_models_that_answered += 1
         if num_models_that_answered > 0:
             resp['accuracies'].append(avg_acc / num_models_that_answered)
-        resp['accuracies'].append(0)
+        else:
+            resp['accuracies'].append(0)
     return resp
 
 

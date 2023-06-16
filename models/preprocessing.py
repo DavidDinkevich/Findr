@@ -71,19 +71,19 @@ def get_overall_accuracy(response_for_each_model):
         avg_acc = 0
         num_models_that_answered = 0
         for model_name in models:
-            if model_name == 'clip':
-                found = False
-                for match in response_for_each_model[model_name]:
-                    if found:
-                        break
-                    for interval in match['intervals']:
-                        if interval[0] <= i <= interval[1]:
-                            avg_acc += match['accuracy'] / 100
-                            num_models_that_answered += 1
-                            found = True
+            if model_name in response_for_each_model.keys():
+                if model_name == 'clip':
+                    found = False
+                    for match in response_for_each_model[model_name]:
+                        if found:
                             break
-            else:
-                if model_name in response_for_each_model.keys():
+                        for interval in match['intervals']:
+                            if interval[0] <= i <= interval[1]:
+                                avg_acc += match['accuracy'] / 100
+                                num_models_that_answered += 1
+                                found = True
+                                break
+                else:
                     for match in response_for_each_model[model_name]:
                         if match['interval'][0] <= i <= match['interval'][1]:
                             avg_acc += float(match['accuracy'])

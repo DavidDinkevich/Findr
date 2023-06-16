@@ -116,6 +116,10 @@ def process_query(query_dict):
 
     # Add num frames
     response['num_frames'] = preprocessing.get_num_frames(original_video_path)
+
+    # Add overall response
+    response['overall_response'] = preprocessing.get_overall_accuracy(response)
+
     print(f'[MODEL CONTROLLER]: Query: {query_dict["id"]} finished. Response: {response}\nTotal time elapsed: {time.time() - start}')
 
     return response

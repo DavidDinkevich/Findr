@@ -67,7 +67,7 @@ def get_overall_accuracy(response_for_each_model):
     }
     models = ('clip', 'yolov5', 'efficientnet', 'resnet', 'inceptionv3')
     for i in range(response_for_each_model['num_frames']):
-        resp['intervals'].append([i, i])
+        resp['intervals'].append([i, i+1])
         avg_acc = 0
         num_models_that_answered = 0
         for model_name in models:
@@ -90,7 +90,7 @@ def get_overall_accuracy(response_for_each_model):
                             if avg_acc > 1:
                                 avg_acc /= 100
                             num_models_that_answered += 1
-            resp['accuracies'].append(avg_acc / num_models_that_answered)
+        resp['accuracies'].append(avg_acc / num_models_that_answered)
     return resp
 
 

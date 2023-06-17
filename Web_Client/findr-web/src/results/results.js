@@ -110,7 +110,7 @@ function VideoPlayer(props) {
                 onClick={handleJumpButtonClick}
                 disabled={props.numberList.length === 0}
               >
-                Jump to Next Result
+                Jump to Next Result {currentIndex + 1} / {props.numberList.length}
               </button>
               <button className="download-button" onClick={handleCaptureFrame}>Download Frame</button>
             </div>

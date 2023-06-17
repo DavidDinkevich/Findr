@@ -99,6 +99,7 @@ function VideoUploader() {
         navigate('/results/', { state: { videoFile: videoFile, jumpPoints, processedResults} });
       }
     } catch (error) {
+      setIsLoading(false);
       setErrorMessage('Network error');
       setShowModal(true);
       console.error('Error uploading file:', error);

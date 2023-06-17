@@ -67,27 +67,38 @@ def get_overall_accuracy(response_for_each_model):
     }
     models = ('clip', 'yolov5', 'efficientnet', 'resnet', 'inceptionv3')
     for i in range(response_for_each_model['num_frames']):
-        resp['intervals'].append([i, i])
+        resp['intervals'].append([i, i+1])
         avg_acc = 0
         num_models_that_answered = 0
         for model_name in models:
-            if model_name == 'clip':
-                found = False
-                for match in response_for_each_model[model_name]:
-                    if found:
-                        break
-                    for interval in match['intervals']:
-                        if interval[0] <= i <= interval[1]:
-                            avg_acc += match['accuracy'] / 100
-                            num_models_that_answered += 1
-                            found = True
+            if model_name in response_for_each_model.keys():
+                if model_name == 'clip':
+                    found = False
+                    for match in response_for_each_model[model_name]:
+                        if found:
                             break
-            else:
-                for match in response_for_each_model[model_name]:
-                    if match['interval'][0] <= i <= match['interval'][1]:
-                        avg_acc += match['accuracy']
-                        num_models_that_answered += 1
+                        for interval in match['intervals']:
+                            if interval[0] <= i <= interval[1]:
+                                acc = match['accuracy']
+                                if acc > 27:
+                                    acc *= 3
+                                avg_acc += acc / 100
+
+                                num_models_that_answered += 1
+                                found = True
+                                break
+                else:
+                    for match in response_for_each_model[model_name]:
+                        if match['interval'][0] <= i <= match['interval'][1]:
+                            acc = float(match['accuracy'])
+                            if acc > 1:
+                                acc /= 100
+                            avg_acc += acc
+                            num_models_that_answered += 1
+        if num_models_that_answered > 0:
             resp['accuracies'].append(avg_acc / num_models_that_answered)
+        else:
+            resp['accuracies'].append(0)
     return resp
 
 

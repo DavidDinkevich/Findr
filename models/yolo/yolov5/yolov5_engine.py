@@ -57,7 +57,7 @@ def run_yolo_on_video(input_path):
             # ADD MATCH
             frame_match['matches'].append({
                 'label': model.names[int(detection[-1])],
-                'accuracy': float(f'{detection[-2]:.2f}')
+                'accuracy': float(f'{detection[-2]:.2f}') * 100
             })
 
         # Add this frame to list of matches

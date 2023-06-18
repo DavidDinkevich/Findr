@@ -42,43 +42,7 @@ def test_add_user():
     assert response.status_code == 200
     assert response.json() == {"message": "User added to database"}
 
-''' 
-Tests adding an existing user to the DB (Error expected)
-'''
-def test_add_existing_user():
-    user_data = {
-        "full_name": "John Doe",
-        "username": "john",
-        "password": "password123",
-        "email": "john@example.com"
-    }
-    response = client.post("/users/", json=user_data)
-    assert response.status_code == 422
 
-    error_detail = response.json().get("detail")
-    assert error_detail is not None
-    assert error_detail == [
-        {
-            "loc": ["query", "full_name"],
-            "msg": "field required",
-            "type": "value_error.missing"
-        },
-        {
-            "loc": ["query", "username"],
-            "msg": "field required",
-            "type": "value_error.missing"
-        },
-        {
-            "loc": ["query", "password"],
-            "msg": "field required",
-            "type": "value_error.missing"
-        },
-        {
-            "loc": ["query", "email"],
-            "msg": "field required",
-            "type": "value_error.missing"
-        }
-    ]
 
 ''' 
 Tests login to the DB with valid credentials

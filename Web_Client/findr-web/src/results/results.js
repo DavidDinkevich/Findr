@@ -4,13 +4,14 @@ import ReactPlayer from "react-player";
 import Logo from "../only_logo.png";
 import TopBar from "../topBar/topBar";
 import HeatMap from "../heatMap/heatMap";
+import { useNavigate } from 'react-router-dom';
 
 function VideoPlayer(props) {
   const videoRef = useRef(null);
   const [playing, setPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [currentIndex, setCurrentIndex] = useState(-1);
-
+  const navigate = useNavigate();
   const data = JSON.parse(props.results.replace(/'/g, '"'));
   useEffect(() => {
     if (videoRef.current) {
@@ -57,6 +58,10 @@ function VideoPlayer(props) {
     setCurrentTime(seconds);
   };
 
+  const handleNextQuery=()=>{
+    navigate('/uploadVideo');
+  }
+
   const handleCaptureFrame = () => {
     console.log(videoRef.current);  
     const player = videoRef.current.getInternalPlayer();
@@ -79,7 +84,7 @@ function VideoPlayer(props) {
   const downloadImage = (imageURL) => {
     const link = document.createElement("a");
     link.href = imageURL;
-    link.download = "captured_frame.png";
+    link.download = `captured_frame_${props.query}.png`;
     link.click();
   };
 
@@ -90,6 +95,7 @@ function VideoPlayer(props) {
         <div className="logo_header"></div>
         <div className="results-wrapper">
           <div className="video-wrapper">
+            <p>Query: {props.query}</p>
             <div className="video-container">
               <ReactPlayer
                 ref={videoRef}
@@ -113,7 +119,10 @@ function VideoPlayer(props) {
                 Jump to Next Result {currentIndex + 1} / {props.numberList.length}
               </button>
               <button className="download-button" onClick={handleCaptureFrame}>Download Frame</button>
+              
             </div>
+            <div className="next-query-wrapper"><button className="another-query-button" onClick={handleNextQuery}>Next query</button></div>
+            
           </div>
           <div className="heat-map-wrapper">
             <HeatMap data={data} />

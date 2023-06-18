@@ -11,9 +11,9 @@ import TopBar from '../topBar/topBar'
 
 function VideoUploader() {
   const videoRef = useRef(null);
-  const [videoFile, setVideoFile] = useState(null);
+  const [videoFile, setVideoFile] = useState("");
   const navigate = useNavigate();
-  const [query, setQuery] = useState('');
+  let query = ""
   const [errorMessage, setErrorMessage] = useState('');
   const [checkboxValues, setCheckboxValues] = useState({
     clip: false,
@@ -37,23 +37,42 @@ function VideoUploader() {
   ];
 
   const handleQueryChange = (event) => {
-    setQuery(event.target.value);
+    // event.preventDefault()
+    // setQuery(event.target.value);
+    query = event.target.value;
   };
 
   function generateStringFromCheckboxValues(checkboxValues) {
-    const trueValues = Object.entries(checkboxValues)
-      .filter(([key, value]) => value === true)
-      .map(([key, value]) => key);
+    const clip_cb = document.getElementById('clip_checkbox');
+    const yolov5_cb = document.getElementById('yolov5_checkbox');
+    const resnet_cb = document.getElementById('resnet_checkbox');
+    const inceptionv3_cb = document.getElementById('inceptionv3_checkbox');
+    const efficientnet_cb = document.getElementById('efficientnet_checkbox');
+
+    let models = []
+    if (clip_cb.checked) { models.push('clip') }
+    if (yolov5_cb.checked) { models.push('yolov5') }
+    if (resnet_cb.checked) { models.push('resnet') }
+    if (inceptionv3_cb.checked) { models.push('inceptionv3') }
+    if (efficientnet_cb.checked) { models.push('efficientnet') }
+
+    console.log(`Sending this string: ${models.join(", ")}`)
+
+    return models.join(", ");
+    // const trueValues = Object.entries(checkboxValues)
+    //   .filter(([key, value]) => value === true)
+    //   .map(([key, value]) => key);
   
-    // Add 'clip' if the list is empty
-    if (trueValues.length === 0) {
-      trueValues.push('clip');
-    }
+    // // Add 'clip' if the list is empty
+    // if (trueValues.length === 0) {
+    //   trueValues.push('clip');
+    // }
     
-    return trueValues.join(", ");
+    // return trueValues.join(", ");
   }
 
   const handleCheckboxChange = (event) => {
+    event.preventDefault()
     const { name, checked } = event.target;
     setCheckboxValues((prevValues) => ({
       ...prevValues,
@@ -73,6 +92,8 @@ function VideoUploader() {
       setShowModal(true);
       return;
     }
+
+    query = document.getElementById('query_bar').value
     if (query.trim() === '') {
       setErrorMessage('Please enter a query.');
       setShowModal(true);
@@ -96,6 +117,7 @@ function VideoUploader() {
       const processedResults = parts[1]
       if (response.status === 200) {
         console.log('File uploaded successfully');
+        console.log(response.data)
         navigate('/results/', { state: { videoFile: videoFile, jumpPoints, processedResults,query} });
       }
     } catch (error) {
@@ -164,7 +186,7 @@ function VideoUploader() {
         </div>
   
         <div className="query-section">
-          <input id='query_bar' type="text" className="form-control" placeholder="Enter your query here" value={query} onChange={handleQueryChange}/>
+          <input id='query_bar' type="text" className="form-control" placeholder="Enter your query here" />
           <button type="button" className="get-results-button" onClick={getResults}>Find results</button>
         </div>
   
@@ -177,7 +199,9 @@ function VideoUploader() {
             <tr>
               <td>
                 <label class="checkbox-container" title="CLIP (Contrastive Language-Image Pretraining) is an AI model that learns to understand images and their corresponding textual descriptions. It is trained on a large dataset of image-text pairs to associate visual and textual representations. This allows CLIP to perform various tasks such as image classification, object detection, and generating textual descriptions for images.">
-                  <input type="checkbox" name="clip" checked={checkboxValues.clip} onChange={handleCheckboxChange} />
+                  <input id="clip_checkbox" type="checkbox" name="clip" 
+                  // checked={checkboxValues.clip}
+                  />
                   <span class="checkmark"></span>
                   CLIP
                 </label>
@@ -187,10 +211,10 @@ function VideoUploader() {
                 <td>
                 <label class="checkbox-container" title="ResNet (Residual Neural Network) is an AI model architecture that revolutionized image classification tasks. It introduces the concept of residual connections, allowing the model to effectively train very deep neural networks. ResNet's key innovation is the use of skip connections that bypass certain layers, enabling the network to learn residual functions. This helps to address the problem of vanishing gradients and enables successful training of deep networks. With its deep architecture, ResNet can learn intricate features and representations, leading to improved accuracy in image classification tasks.">
                     <input
+                      id="resnet_checkbox"
                       type="checkbox"
                       name="resnet"
-                      checked={checkboxValues.resnet}
-                      onChange={handleCheckboxChange}
+                      // checked={checkboxValues.resnet}
                     />
                     <span class="checkmark"></span>
                     ResNet
@@ -201,10 +225,10 @@ function VideoUploader() {
                 <td>
                 <label class="checkbox-container" title="InceptionV3 is an AI model architecture that excels in image recognition and classification tasks. It utilizes a deep convolutional neural network with multiple layers, including inception modules. Inception modules employ various filter sizes to capture different scales of features in parallel, enabling the model to capture both local and global information. InceptionV3 reduces the number of parameters and computational complexity by using 1x1 convolutions to perform dimensionality reduction. This architecture allows InceptionV3 to achieve high accuracy in image classification tasks while maintaining efficiency.">
                     <input
+                      id="inceptionv3_checkbox"
                       type="checkbox"
                       name="inceptionv3"
-                      checked={checkboxValues.inceptionv3}
-                      onChange={handleCheckboxChange}
+                      // checked={checkboxValues.inceptionv3}
                     />
                     <span class="checkmark"></span>
                     Inceptionv3
@@ -215,10 +239,11 @@ function VideoUploader() {
                 <td>
                 <label class="checkbox-container" title="YOLOv5 (You Only Look Once) is an AI model architecture specifically designed for real-time object detection. It utilizes a single neural network to simultaneously predict bounding boxes and class probabilities for objects within an image. YOLOv5 achieves this by dividing the image into a grid and associating each grid cell with multiple anchor boxes. The model then predicts the bounding box coordinates and class probabilities for each anchor box. YOLOv5 employs a backbone network (such as CSPDarknet53 or EfficientNet) for feature extraction and applies additional convolutional layers for detection. YOLOv5 is known for its speed and accuracy, making it well-suited for applications that require real-time object detection.">
                     <input
+                      id="yolov5_checkbox"
                       type="checkbox"
                       name="yolov5"
-                      checked={checkboxValues.yolov5}
-                      onChange={handleCheckboxChange}
+                      // checked={checkboxValues.yolov5}
+                      // onChange={handleCheckboxChange}
                     />
                     <span class="checkmark"></span>
                     YOLOv5
@@ -229,10 +254,11 @@ function VideoUploader() {
                 <td>
                 <label class="checkbox-container" title="EfficientNet is an AI model architecture that achieves high accuracy while maintaining efficiency by using a compound scaling method. It scales the depth, width, and resolution of the model in a balanced manner to optimize performance. EfficientNet employs a mobile inverted bottleneck convolutional (MBConv) block, which consists of depth-wise convolutions, point-wise convolutions, and skip connections. This block reduces computational complexity while capturing complex patterns and features. EfficientNet achieves state-of-the-art performance on various image classification tasks with fewer parameters and computations compared to other models.">
                     <input
+                      id="efficientnet_checkbox"
                       type="checkbox"
                       name="efficientnet"
-                      checked={checkboxValues.efficientnet}
-                      onChange={handleCheckboxChange}
+                      // checked={checkboxValues.efficientnet}
+                      // onChange={handleCheckboxChange}
                     />
                     <span class="checkmark"></span>
                     EfficientNet

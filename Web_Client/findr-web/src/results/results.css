@@ -74,6 +74,22 @@ body, html {
   cursor: pointer;
 }
 
+.another-query-button {
+  margin: 5px;
+  padding: 10px;
+  color: black;
+  background-color: #97d3fe;
+  width:30%;
+  border: none;
+  cursor: pointer;
+}
+
+.next-query-wrapper{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .download-button:hover {
   background-color: #105679;
 }

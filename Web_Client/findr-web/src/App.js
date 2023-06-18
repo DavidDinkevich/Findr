@@ -22,9 +22,9 @@ function App() {
 
 function VideoPlayerWrapper() {
   const location = useLocation();
-  const { videoFile: file, jumpPoints, processedResults} = location.state;
+  const { videoFile: file, jumpPoints, processedResults, query} = location.state;
   return (
-    <VideoPlayer video={file} numberList={jumpPoints} results={processedResults}/>
+    <VideoPlayer video={file} numberList={jumpPoints} results={processedResults} query={query}/>
   );
 }
 

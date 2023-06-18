@@ -96,9 +96,10 @@ function VideoUploader() {
       const processedResults = parts[1]
       if (response.status === 200) {
         console.log('File uploaded successfully');
-        navigate('/results/', { state: { videoFile: videoFile, jumpPoints, processedResults} });
+        navigate('/results/', { state: { videoFile: videoFile, jumpPoints, processedResults,query} });
       }
     } catch (error) {
+      setIsLoading(false);
       setErrorMessage('Network error');
       setShowModal(true);
       console.error('Error uploading file:', error);

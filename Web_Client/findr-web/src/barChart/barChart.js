@@ -1,7 +1,7 @@
 import React from 'react';
 import './bar-chart.css';
 
-const BarChart = ({ modelName, intervals, accuracies, numFrames, color }) => {
+const BarChart = ({ modelName, intervals, accuracies, numFrames }) => {
   const barWidth = 500; // Width of the bar (in pixels)
   const barHeight = 20; // Height of the bar (in pixels)
 
@@ -42,7 +42,7 @@ const renderIntervals = () => {
 
     // Style of interval
     const intervalStyle = {
-      width: intervalWidth,
+      width: intervalWidth + 1,
       backgroundColor: intervalColor,
       display: 'inline-block',
       height: barHeight,
@@ -55,7 +55,7 @@ const renderIntervals = () => {
       <div
         key={index}
         style={intervalStyle}
-        title={`Accuracy: ${accuracy}`}
+        title={`Interval: [${interval}] Accuracy: ${accuracy} `}
       ></div>
     );
   });

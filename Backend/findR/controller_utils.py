@@ -1,6 +1,5 @@
-import ast
 import json
-import math
+
 
 model_names=['clip','yolov5','efficientnet','resnet','inceptionv3']
 def process_results(json_string):
@@ -25,14 +24,13 @@ def process_results(json_string):
                     for item in data[key]:
                         intervals.append(item["interval"])
                         accuracies.append(float(item['accuracy']))
-                        if (float(item['accuracy'])>80):
+                        if (float(item['accuracy'])>70):
                             first_items.append(item["interval"][0])
                 intervals, accuracies = sort_and_unzip_lists(intervals, accuracies)
                 model_dict['intervals']=intervals
                 model_dict['accuracies']=accuracies
                 model_dict['num_frames']=num_frames
                 processed_results[key]=model_dict
-                processed_results['overall_results']=json_string['overall_results']
         first_items = list(set(first_items))
         return first_items, processed_results
 

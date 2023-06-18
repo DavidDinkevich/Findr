@@ -99,7 +99,7 @@ body, html {
   border-radius: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   z-index: 9999;
-  width: 300px; /* Adjust the width as per your preference */
+  width: 300px; 
   text-align: center; /* Center the content horizontally */
 }
 

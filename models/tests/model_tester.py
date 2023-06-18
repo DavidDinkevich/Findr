@@ -27,7 +27,7 @@ def run_test(test):
     print(f'Time elapsed: {duration}')
 
     if duration > test['time']:
-        print(f'Failed time constraints! {duration}/{time["time"]} seconds')
+        print(f'Failed time constraints! {duration}/{test["time"]} seconds')
     return test_passed
     # dbg_print(f'Model response was {response}')
 

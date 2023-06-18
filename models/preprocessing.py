@@ -11,7 +11,6 @@ def compress_video(input_file, output_file, similarity_threshold=0.9):
     n_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
 
     # COMPUTE NUMBER OF THREADS AND SKIP RATE
-    # Rather arbitrary...
     n_threads = 1 if n_frames < 1000 else int(multiprocessing.cpu_count() / 2)
     skip_rate = 1 if n_frames < 100 else int(round(0.0008 * n_frames + 3))
 

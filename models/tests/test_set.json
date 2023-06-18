@@ -1,0 +1,40 @@
+{
+  "tests": [
+    {
+      "video_path": "C:\\Users\\david\\Documents\\github repos\\Findr\\models\\resources\\giraffe.mp4",
+      "query": "giraffe",
+      "matches": {
+        "clip": [ 10, 50, 100, 130 ],
+        "yolov5": [ 10, 50, 100, 130 ]
+      }
+    },
+    {
+      "video_path": "C:\\Users\\david\\Documents\\github repos\\Findr\\models\\resources\\hippo.mp4",
+      "query": "hippo",
+      "matches": {
+        "clip": [ 10, 50, 100, 130 ],
+        "resnet": [ 10, 50, 100, 130 ],
+        "inceptionv3": [ 10, 50, 100, 130 ],
+        "efficientnet": [ 10, 50, 100, 130 ]
+      }
+    },
+    {
+      "video_path": "C:\\Users\\david\\Documents\\github repos\\Findr\\models\\resources\\giraffe_and_hippo.mp4",
+      "query": "giraffe",
+      "matches": {
+        "clip": [ 5, 12, 90, 100 ],
+        "yolov5": [ 5, 12, 90, 100 ]
+      }
+    },
+    {
+      "video_path": "C:\\Users\\david\\Documents\\github repos\\Findr\\models\\resources\\giraffe_and_hippo.mp4",
+      "query": "hippo",
+      "matches": {
+        "clip": [ 15, 60, 80 ],
+        "resnet": [ 15, 60, 80 ],
+        "inceptionv3": [ 15, 60, 80 ],
+        "efficientnet": [ 15, 60, 80 ]
+      }
+    }
+  ]
+}

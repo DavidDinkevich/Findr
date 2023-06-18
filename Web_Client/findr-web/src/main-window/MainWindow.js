@@ -171,7 +171,7 @@ function VideoUploader() {
 
       </div>
       <div className="checkbox-section">
-        <p>Choose which algorithms we should run for you (hover above for explanations):</p>
+        <p>Choose which AI models to run (hover above for explanations):</p>
           <table>
             <tbody>
             <tr>

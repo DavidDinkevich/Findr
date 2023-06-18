@@ -6,7 +6,8 @@
       "matches": {
         "clip": [ 10, 50, 100, 130 ],
         "yolov5": [ 10, 50, 100, 130 ]
-      }
+      },
+      "time": 5
     },
     {
       "video_path": "C:\\Users\\david\\Documents\\github repos\\Findr\\models\\resources\\hippo.mp4",
@@ -16,7 +17,8 @@
         "resnet": [ 10, 50, 100, 130 ],
         "inceptionv3": [ 10, 50, 100, 130 ],
         "efficientnet": [ 10, 50, 100, 130 ]
-      }
+      },
+      "time": 10
     },
     {
       "video_path": "C:\\Users\\david\\Documents\\github repos\\Findr\\models\\resources\\giraffe_and_hippo.mp4",
@@ -24,7 +26,8 @@
       "matches": {
         "clip": [ 5, 12, 90, 100 ],
         "yolov5": [ 5, 12, 90, 100 ]
-      }
+      },
+      "time": 5
     },
     {
       "video_path": "C:\\Users\\david\\Documents\\github repos\\Findr\\models\\resources\\giraffe_and_hippo.mp4",
@@ -34,7 +37,69 @@
         "resnet": [ 15, 60, 80 ],
         "inceptionv3": [ 15, 60, 80 ],
         "efficientnet": [ 15, 60, 80 ]
-      }
+      },
+      "time": 5
+    },
+    {
+      "video_path": "C:\\Users\\david\\Documents\\github repos\\Findr\\models\\resources\\bird_bottle_banana.mp4",
+      "query": "bird",
+      "matches": {
+        "clip": [ 1, 10, 60, 100, 130, 180, 300, 400 ],
+        "inceptionv3": [ 15, 60, 80 ],
+        "yolov5": [ 10, 40, 60, 90 ]
+      },
+      "time": 20
+    },
+    {
+      "video_path": "C:\\Users\\david\\Documents\\github repos\\Findr\\models\\resources\\bird_bottle_banana.mp4",
+      "query": "banana",
+      "matches": {
+        "clip": [ 15, 60, 80, 230, 300, 350, 400, 500 ],
+        "resnet": [ 500, 510, 520 ],
+        "inceptionv3": [ 170, 200, 210, 220, 500, 520, 540 ],
+        "efficientnet": [ 170, 180, 200, 500, 510 ]
+      },
+      "time": 20
+    },
+    {
+      "video_path": "C:\\Users\\david\\Documents\\github repos\\Findr\\models\\resources\\bird_bottle_banana.mp4",
+      "query": "bottle",
+      "matches": {
+        "clip": [ 15, 60, 80 ]
+      },
+      "time": 10
+    },
+    {
+      "video_path": "C:\\Users\\david\\Documents\\github repos\\Findr\\models\\resources\\car_and_boat.mp4",
+      "query": "car",
+      "matches": {
+        "clip": [ 15, 60, 80 ],
+        "resnet": [ 15, 16, 17],
+        "inceptionv3": [ 15, 16, 17 ],
+        "yolov5": [ 5, 12, 45, 60, 80, 100 ],
+        "efficientnet": [ 15, 40, 310, 320 ]
+      },
+      "time": 10
+    },
+    {
+      "video_path": "C:\\Users\\david\\Documents\\github repos\\Findr\\models\\resources\\car_and_boat.mp4",
+      "query": "boat",
+      "matches": {
+        "clip": [ 15, 60, 80, 130, 160, 300, 400, 420 ],
+        "yolov5": [ 165, 200, 220, 250, 255 ]
+      },
+      "time": 10
+    },
+    {
+      "video_path": "C:\\Users\\david\\Documents\\github repos\\Findr\\models\\resources\\umbrella_pizza.mp4",
+      "query": "umbrella",
+      "matches": {
+        "clip": [ 40, 52, 58, 68 ],
+        "resnet": [ 37, 40, 45, 49, 58 ],
+        "inceptionv3": [ 37, 40, 45, 49, 58 ],
+        "efficientnet": [ 52, 58, 68 ]
+      },
+      "time": 30
     }
   ]
 }

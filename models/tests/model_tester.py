@@ -9,7 +9,9 @@ DEBUG = True
 models = ('clip', 'yolov5', 'efficientnet', 'resnet', 'inceptionv3')
 
 def run_test(test):
+    start = time.time()
     response = json.loads(send_request(test['query'], test['video_path'], models))
+    duration = time.time() - start
 
     test_passed = True
     for model_name, correct_matches in test['matches'].items():
@@ -22,7 +24,10 @@ def run_test(test):
 
         # dbg_print(f'Model intervals: {model_name} - {model_intervals}')
         # dbg_print(f'Correct matches: {correct_matches}')
+    print(f'Time elapsed: {duration}')
 
+    if duration > test['time']:
+        print(f'Failed time constraints! {duration}/{time["time"]} seconds')
     return test_passed
     # dbg_print(f'Model response was {response}')
 
@@ -63,15 +68,12 @@ def main():
         tests = json.load(f)
 
     for i, test in enumerate(tests['tests']):
-        print(f'--------------------- Test {i + 1} ---------------------')
-        start = time.time()
+        print(f'--------------------- Test {i + 1} ({tests["tests"][i]["video_path"]}) ---------------------')
         test_passed = run_test(test)
-        duration = time.time() - start
         if test_passed:
             print('Test passed!')
         else:
             print('Test failed!')
-        print(f'Time elapsed: {duration}')
 
 
 ############ UTILS ############
